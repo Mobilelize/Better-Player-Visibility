@@ -19,6 +19,7 @@ import net.mobilelize.betterplayervisibility.client.ping.EnumsPing;
 import net.mobilelize.betterplayervisibility.client.ping.Ping;
 import net.mobilelize.betterplayervisibility.client.priority.BasePriorityGroup;
 import net.mobilelize.betterplayervisibility.client.priority.Priority;
+import net.mobilelize.betterplayervisibility.client.utils.ChatOrActionBar;
 import net.mobilelize.betterplayervisibility.client.utils.TextFormatter;
 import net.mobilelize.betterplayervisibility.client.visibility.EntitiesEnumsVisibility;
 import net.mobilelize.betterplayervisibility.client.visibility.EnumsVisibility;
@@ -59,6 +60,12 @@ public class ConfigMenu {
                 .setDefaultValue("&b[BPV]")
                 .setTooltip(Text.literal("Set a custom prefix."))
                 .setSaveConsumer(ConfigMenu::setPrefix)
+                .build());
+
+        general.addEntry(entryBuilder.startEnumSelector(Text.of("Keybinds Activation Feedback"), ChatOrActionBar.class, ConfigManager.configData.chatOrActionBar)
+                .setSaveConsumer(newValue -> ConfigManager.configData.chatOrActionBar = newValue)
+                .setTooltip(Text.literal("Set's which action appears when activating actions though key binds."))
+                .setDefaultValue(ChatOrActionBar.ACTIONBAR)
                 .build());
 
         general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Full Bright Enabled"), FullBright.isEnabled())
