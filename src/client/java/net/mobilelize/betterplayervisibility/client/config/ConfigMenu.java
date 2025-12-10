@@ -64,7 +64,7 @@ public class ConfigMenu {
 
         general.addEntry(entryBuilder.startEnumSelector(Text.of("Keybinds Activation Feedback"), ChatOrActionBar.class, ConfigManager.configData.chatOrActionBar)
                 .setSaveConsumer(newValue -> ConfigManager.configData.chatOrActionBar = newValue)
-                .setTooltip(Text.literal("Set's which action appears when activating actions though key binds."))
+                .setTooltip(Text.literal("Sets which action appears when activating actions though key binds."))
                 .setDefaultValue(ChatOrActionBar.ACTIONBAR)
                 .build());
 
@@ -82,7 +82,7 @@ public class ConfigMenu {
 
         general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Visible Barriers Particles Enabled"), ConfigManager.configData.visibleBarrierParticles)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Set's the visibility of barriers particles for visible barriers."))
+                .setTooltip(Text.literal("Sets the visibility of barriers particles for visible barriers."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibleBarrierParticles = newValue)
                 .build());
     }
