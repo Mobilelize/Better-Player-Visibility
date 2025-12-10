@@ -65,7 +65,7 @@ public class EntitiesVisibility {
     }
 
     private static boolean listDoesNotContainType(List<String> list, String type) {
-        return list.stream().noneMatch(s -> s.equalsIgnoreCase(type));
+        return list.stream().noneMatch(s -> getTypeOrAddOne(s).equalsIgnoreCase(type));
     }
 
     public static Map<EntitiesEnumsVisibility, List<String>> getGroupMap() {
@@ -75,5 +75,10 @@ public class EntitiesVisibility {
                 EntitiesEnumsVisibility.WHITELIST_3, ConfigManager.configData.entitiesVisibilityList3,
                 EntitiesEnumsVisibility.WHITELIST_4, ConfigManager.configData.entitiesVisibilityList4,
                 EntitiesEnumsVisibility.WHITELIST_5, ConfigManager.configData.entitiesVisibilityList5);
+    }
+
+    public static String getTypeOrAddOne(String type) {
+        if (type.contains(":")) return type;
+        return "minecraft:" + type;
     }
 }
