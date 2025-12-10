@@ -1,0 +1,16 @@
+{
+  "key.category.minecraft.betterplayervisibility.keybinds": "Better Player Visibility",
+  "key.category.betterplayervisibility.keybinds": "Better Player Visibility",
+  "key.betterplayervisibility.showallplayers" : "Show All Players Toggle",
+  "key.betterplayervisibility.showallentities" : "Show All Entities Toggle",
+  "key.betterplayervisibility.playerscyclevisibility" : "Players Cycle Visibility Mode",
+  "key.betterplayervisibility.entitiescyclevisibility" : "Entities Cycle Visibility Mode",
+  "key.betterplayervisibility.playersradiusvisibility" : "Players Toggle Visibility Radius",
+  "key.betterplayervisibility.entitiesradiusvisibility" : "Entities Toggle Visibility Radius",
+  "key.betterplayervisibility.playerssize" : "Players Size Toggle",
+  "key.betterplayervisibility.playersreversedvisibility" : "Reverse Players Visibility Toggle",
+  "key.betterplayervisibility.entitiesreversedvisibility" : "Reverse Entities Visibility Toggle",
+  "key.betterplayervisibility.fullbright" : "Full Bright Toggle",
+  "key.betterplayervisibility.ping" : "Ping Toggle",
+  "key.betterplayervisibility.barriers" : "Visible Barriers Toggle"
+}

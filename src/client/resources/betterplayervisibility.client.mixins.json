@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.mobilelize.betterplayervisibility.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "ClientWorld",
+    "EntityRenderDispatcherMixin",
+    "EntityRendererMixin",
+    "PlayerEntityRendererMixin",
+    "SimpleOptionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "mixins": [
+    "AbstractBlockStateMixin",
+    "BarrierBlockMixin",
+    "EntityMixin"
+  ]
+}

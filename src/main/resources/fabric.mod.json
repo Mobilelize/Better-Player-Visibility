@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "betterplayervisibility",
+  "version": "${version}",
+  "name": "Better Player Visibility",
+  "description": "Control what you see in-game from hiding players to boosting visibility. All with Better Player Visibility.",
+  "authors": ["Mobilelize"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/betterplayervisibility/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient"
+    ],
+    "main": [
+      "net.mobilelize.betterplayervisibility.BetterPlayerVisibility"
+    ],
+    "modmenu": [
+      "net.mobilelize.betterplayervisibility.client.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "betterplayervisibility.mixins.json",
+    {
+      "config": "betterplayervisibility.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "*",
+    "cloth-config": "*"
+  }
+}
