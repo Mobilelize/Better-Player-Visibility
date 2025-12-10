@@ -16,15 +16,14 @@ public class HighlightPlayers {
     public static void highlightNameArgs (Args args) {
         //State at args.get(0);
         if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
-        String playerName = player.name;
+        if (player.displayName == null) return;
+        String playerName = player.displayName.getString();
 
-        //Display name at args.get(1);
-        if (!(args.get(1) instanceof Text displayText)) return;
         BaseHighlight group = getGroupByPlayerName(playerName);
         if (group == null || !group.highlightEnabled) return;
 
-        Text text = modifiedName(displayText, group);
-        args.set(1, text);
+        player.displayName = modifiedName(player.displayName, group);
+        args.set(0, player);
     }
 
     public static BaseHighlight getGroupByPlayerName(String name) {

@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.fullbright.FullBright;
 import net.mobilelize.betterplayervisibility.client.utils.ChatOrActionBar;
@@ -21,7 +22,12 @@ public class KeybindingManager {
     public static Set<KeyBinding> keyBindings = new HashSet<>();
 
     // Define category for the keybinding
-    public static final String CATEGORY = "key.category.betterplayervisibility.keybinds";
+    //public static final String CATEGORY = "key.category.betterplayervisibility.keybinds";
+
+    public static final Identifier CATEGORY_ID = Identifier.of("betterplayervisibility", "keybinds");
+
+    public static final KeyBinding.Category CATEGORY =
+            new KeyBinding.Category(CATEGORY_ID);
 
     public static final String SHOW_ALL_PLAYERS_TOGGLE = "key.betterplayervisibility.showallplayers";
     public static final String SHOW_ALL_ENTITIES_TOGGLE = "key.betterplayervisibility.showallentities";

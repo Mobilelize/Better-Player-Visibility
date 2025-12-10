@@ -13,6 +13,8 @@ import java.util.Objects;
 public class EntitiesVisibility {
     public static boolean shouldBeInvisible(Entity entity) {
 
+        if (entity == null) return false;
+
         boolean reverse = ConfigManager.configData.reversedEntitiesVisibility;
 
         if (entity instanceof AbstractClientPlayerEntity player) {

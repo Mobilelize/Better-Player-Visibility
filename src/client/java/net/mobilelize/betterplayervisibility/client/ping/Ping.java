@@ -24,22 +24,22 @@ public class Ping {
         if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
 
         //Display name at args.get(1);
-        if (!(args.get(1) instanceof Text displayText)) return;
+        if (player.displayName == null) return;
         int ping = getPlayersPingById(player.id);
         BasePing group = getPingGroup(ping);
 
-        Text text = modifiedName(displayText, group, ping);
-        args.set(1, text);
+        player.displayName = modifiedName(player.displayName, group, ping);
+        args.set(0, player);
     }
 
     public static int getPlayersPing(UUID uuid) {
         if (MinecraftClient.getInstance().getNetworkHandler() == null || uuid == null) return -1;
-        return MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().filter(entry -> entry.getProfile().getId().equals(uuid)).map(PlayerListEntry::getLatency).findFirst().orElse(-1);
+        return MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().filter(entry -> entry.getProfile().id().equals(uuid)).map(PlayerListEntry::getLatency).findFirst().orElse(-1);
     }
 
     public static int getPlayersPingByName(String name) {
         if (MinecraftClient.getInstance().getNetworkHandler() == null) return -1;
-        return getPlayersPing(MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).filter(profile -> profile.getName().equalsIgnoreCase(name)).map(GameProfile::getId).findFirst().orElse(null));
+        return getPlayersPing(MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).filter(profile -> profile.name().equalsIgnoreCase(name)).map(GameProfile::id).findFirst().orElse(null));
     }
 
     public static int getPlayersPingById(int id) {

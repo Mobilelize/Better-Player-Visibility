@@ -30,7 +30,7 @@ public class PlayerVisibility {
 
         if (notInRadius(player)) return false;
 
-        String playerName = player.getGameProfile().getName();
+        String playerName = player.getGameProfile().name();
 
         if (ConfigManager.configData.visibility == EnumsVisibility.NONE) {
             return true;
@@ -80,7 +80,7 @@ public class PlayerVisibility {
         if (!ConfigManager.configData.visibilityNPCEnabled)
             return false;
 
-        String name = player.getGameProfile().getName();
+        String name = player.getGameProfile().name();
 
         if (name.length() > 16) return true;
         if (ConfigManager.configData.visibilityNPC3Characters && name.length() < 3) return true;
@@ -92,7 +92,7 @@ public class PlayerVisibility {
             if (MinecraftClient.getInstance().getNetworkHandler() == null) return false;
             PlayerListEntry entry = MinecraftClient.getInstance()
                     .getNetworkHandler()
-                    .getPlayerListEntry(player.getGameProfile().getId());
+                    .getPlayerListEntry(player.getGameProfile().id());
 
             return entry == null;
         }

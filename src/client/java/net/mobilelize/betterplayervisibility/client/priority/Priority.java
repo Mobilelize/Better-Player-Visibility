@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.entity.Entity;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 
@@ -17,9 +18,16 @@ public class Priority {
 
     public static void addPriorityCache(AbstractClientPlayerEntity player) {
         if (MinecraftClient.getInstance().getNetworkHandler() == null) return;
-        UUID uuid = MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::getId).filter(s -> s.equals(player.getUuid())).findFirst().orElse(null);
+        UUID uuid = MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::id).filter(s -> s.equals(player.getUuid())).findFirst().orElse(null);
         if (uuid == null) return;
-        priorityCache.put(player.getUuid(), new PriorityCachedEntry(player.getId(), player.getGameProfile().getName()));
+        priorityCache.put(player.getUuid(), new PriorityCachedEntry(player.getId(), player.getGameProfile().name()));
+    }
+
+    public static void addPriorityCache(int id) {
+        if (MinecraftClient.getInstance().world == null) return;
+        AbstractClientPlayerEntity abstractClientPlayerEntity = MinecraftClient.getInstance().world.getPlayers().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
+        if (abstractClientPlayerEntity == null || abstractClientPlayerEntity.isMainPlayer()) return;
+        addPriorityCache(abstractClientPlayerEntity);
     }
 
     public static void removePriorityCache(List<UUID> playersUUIDs) {
@@ -151,7 +159,7 @@ public class Priority {
         List<AbstractClientPlayerEntity> players = MinecraftClient.getInstance().world.getPlayers().stream().sorted(Comparator.comparingInt(Entity::getId)).toList();
         HashMap<Integer, String> list = new HashMap<>();
         for (AbstractClientPlayerEntity player : players) {
-            list.put(player.getId(), player.getGameProfile().getName());
+            list.put(player.getId(), player.getGameProfile().name());
         }
         return list;
     }

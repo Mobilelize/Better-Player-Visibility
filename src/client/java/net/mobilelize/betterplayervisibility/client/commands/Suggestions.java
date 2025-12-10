@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class Suggestions {
     public static final SuggestionProvider<FabricClientCommandSource> getOnlinePlayersNames = (context, builder) -> {
-        for (String playerName : Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::getName).toList()) {
+        for (String playerName : Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::name).toList()) {
             if (CommandSource.shouldSuggest(builder.getRemaining().toLowerCase(), playerName.toLowerCase())) {
                 builder.suggest(playerName);
             }
