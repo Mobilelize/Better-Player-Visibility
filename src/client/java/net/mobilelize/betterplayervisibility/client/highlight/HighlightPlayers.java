@@ -2,6 +2,7 @@ package net.mobilelize.betterplayervisibility.client.highlight;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
@@ -13,9 +14,9 @@ import java.util.Objects;
 public class HighlightPlayers {
 
     public static void highlightNameArgs (Args args) {
-        //Entity at args.get(0);
-        if (!(args.get(0) instanceof AbstractClientPlayerEntity player)) return;
-        String playerName = player.getGameProfile().getName();
+        //State at args.get(0);
+        if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
+        String playerName = player.name;
 
         //Display name at args.get(1);
         if (!(args.get(1) instanceof Text displayText)) return;

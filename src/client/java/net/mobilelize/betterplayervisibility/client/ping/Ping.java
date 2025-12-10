@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
@@ -19,12 +20,12 @@ public class Ping {
 
     public static void pingNameArgs (Args args) {
         if (!ConfigManager.configData.showPing) return;
-        //Entity at args.get(0);
-        if (!(args.get(0) instanceof AbstractClientPlayerEntity player)) return;
+        //State at args.get(0);
+        if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
 
         //Display name at args.get(1);
         if (!(args.get(1) instanceof Text displayText)) return;
-        int ping = getPlayersPing(player.getUuid());
+        int ping = getPlayersPingById(player.id);
         BasePing group = getPingGroup(ping);
 
         Text text = modifiedName(displayText, group, ping);
