@@ -49,6 +49,7 @@ public class ConfigMenu {
         ping(builder, entryBuilder);
         priority(builder, entryBuilder);
         general(builder, entryBuilder);
+        commands(builder, entryBuilder);
 
         return builder.build();
     }
@@ -542,6 +543,50 @@ public class ConfigMenu {
                 &f%a% &3= &bAccent Color
                 &f%c% &3= &bColor
                 """)).build());
+    }
+
+    public static void commands(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
+        ConfigCategory commands = builder.getOrCreateCategory(Text.literal("Commands"));
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&3All &badditions and removals &3of aliases requires the player to switch server's example, hub-1 to hub-2, or by leaving the world there in, to update the commands&3."))
+                .build());
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&b&lIMPORTANT: &r&3Client commands have &bhigher priority &3than Server commands. So be sure to pick a name that servers don't already use!"))
+                .build());
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&3Player Visibility:"))
+                .build());
+
+        commands.addEntry(entryBuilder.startStrList(Text.literal("/visibility Aliases List"), ConfigManager.configData.visibilityCommandAliases)
+                .setSaveConsumer(newValue -> ConfigManager.configData.visibilityCommandAliases = newValue.stream().map(String::toLowerCase).toList())
+                .build());
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&3Entity visibility:"))
+                .build());
+
+        commands.addEntry(entryBuilder.startStrList(Text.literal("/entitiesvisibility Aliases List"), ConfigManager.configData.entitiesVisibilityCommandAliases)
+                .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityCommandAliases = newValue)
+                .build());
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&3Ping:"))
+                .build());
+
+        commands.addEntry(entryBuilder.startStrList(Text.literal("/pingget Aliases List"), ConfigManager.configData.pingCommandAliases)
+                .setSaveConsumer(newValue -> ConfigManager.configData.pingCommandAliases = newValue)
+                .build());
+
+        commands.addEntry(entryBuilder.startTextDescription(TextFormatter
+                        .formatText("&3Priority:"))
+                .build());
+
+        commands.addEntry(entryBuilder.startStrList(Text.literal("/priority Aliases List"), ConfigManager.configData.priorityCommandAliases)
+                .setSaveConsumer(newValue -> ConfigManager.configData.priorityCommandAliases = newValue)
+                .build());
     }
 
     private static void saveConfig() {
