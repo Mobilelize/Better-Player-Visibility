@@ -561,7 +561,7 @@ public class ConfigMenu {
                 .build());
 
         commands.addEntry(entryBuilder.startStrList(Text.literal("/visibility Aliases List"), ConfigManager.configData.visibilityCommandAliases)
-                .setSaveConsumer(newValue -> ConfigManager.configData.visibilityCommandAliases = newValue.stream().map(String::toLowerCase).toList())
+                .setSaveConsumer(newValue -> ConfigManager.configData.visibilityCommandAliases = newValue)
                 .build());
 
         commands.addEntry(entryBuilder.startTextDescription(TextFormatter
