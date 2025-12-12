@@ -200,6 +200,14 @@ After changing aliases, reconnect or switch servers to apply changes.
 
 ---
 
+## 📦 Requirements
+
+- **Cloth Config API** is required  
+  This mod depends on Cloth Config for its in-game configuration menu.  
+  Make sure Cloth Config is installed, or the mod will not load.
+
+---
+
 ## ℹ️ General Notes
 
 - Fully client-side
