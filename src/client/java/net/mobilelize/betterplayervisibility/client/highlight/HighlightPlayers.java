@@ -5,6 +5,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -17,7 +18,9 @@ public class HighlightPlayers {
         //State at args.get(0);
         if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
         if (player.displayName == null) return;
-        String playerName = player.displayName.getString();
+        AbstractClientPlayerEntity playerEntity = getPlayerById(player.id);
+        if (playerEntity == null) return;
+        String playerName = playerEntity.getName().getString();
 
         BaseHighlight group = getGroupByPlayerName(playerName);
         if (group == null || !group.highlightEnabled) return;
