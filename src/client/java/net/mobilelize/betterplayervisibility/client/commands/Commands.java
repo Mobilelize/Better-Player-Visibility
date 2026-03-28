@@ -11,8 +11,9 @@ import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.visibility.EntitiesEnumsVisibility;
 import net.mobilelize.betterplayervisibility.client.visibility.EnumsVisibility;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
+
 
 public class Commands {
 

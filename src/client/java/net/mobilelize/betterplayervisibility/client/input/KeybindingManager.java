@@ -1,12 +1,12 @@
 package net.mobilelize.betterplayervisibility.client.input;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.fullbright.FullBright;
 import net.mobilelize.betterplayervisibility.client.utils.ChatOrActionBar;
@@ -19,15 +19,15 @@ import java.util.*;
 
 public class KeybindingManager {
 
-    public static Set<KeyBinding> keyBindings = new HashSet<>();
+    public static Set<KeyMapping> keyBindings = new HashSet<>();
 
     // Define category for the keybinding
     //public static final String CATEGORY = "key.category.betterplayervisibility.keybinds";
 
-    public static final Identifier CATEGORY_ID = Identifier.of("betterplayervisibility", "keybinds");
+    public static final Identifier CATEGORY_ID = Identifier.fromNamespaceAndPath("betterplayervisibility", "keybinds");
 
-    public static final KeyBinding.Category CATEGORY =
-            new KeyBinding.Category(CATEGORY_ID);
+    public static final KeyMapping.Category CATEGORY =
+            new KeyMapping.Category(CATEGORY_ID);
 
     public static final String SHOW_ALL_PLAYERS_TOGGLE = "key.betterplayervisibility.showallplayers";
     public static final String SHOW_ALL_ENTITIES_TOGGLE = "key.betterplayervisibility.showallentities";
@@ -45,86 +45,86 @@ public class KeybindingManager {
     public static final String REVERSE_PLAYERS_VISIBILITY_TOGGLE = "key.betterplayervisibility.playersreversedvisibility";
     public static final String REVERSE_ENTITIES_VISIBILITY_TOGGLE = "key.betterplayervisibility.entitiesreversedvisibility";
 
-    public static KeyBinding playersCycleKeyBinding = new KeyBinding(
+    public static KeyMapping playersCycleKeyBinding = new KeyMapping(
             PLAYERS_CYCLE_VISIBILITY_MODE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding entitiesCycleKeyBinding = new KeyBinding(
+    public static KeyMapping entitiesCycleKeyBinding = new KeyMapping(
             ENTITIES_CYCLE_VISIBILITY_MODE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding showAllPlayersToggleBinding = new KeyBinding(
+    public static KeyMapping showAllPlayersToggleBinding = new KeyMapping(
             SHOW_ALL_PLAYERS_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding showAllEntitiesToggleBinding = new KeyBinding(
+    public static KeyMapping showAllEntitiesToggleBinding = new KeyMapping(
             SHOW_ALL_ENTITIES_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding playersRadiusToggleBinding = new KeyBinding(
+    public static KeyMapping playersRadiusToggleBinding = new KeyMapping(
             PLAYERS_TOGGLE_VISIBILITY_RADIUS,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding entitiesRadiusToggleBinding = new KeyBinding(
+    public static KeyMapping entitiesRadiusToggleBinding = new KeyMapping(
             ENTITIES_TOGGLE_VISIBILITY_RADIUS,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding playersSizeToggle = new KeyBinding(
+    public static KeyMapping playersSizeToggle = new KeyMapping(
             PLAYERS_SIZE_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding playersReverseVisibilityToggle = new KeyBinding(
+    public static KeyMapping playersReverseVisibilityToggle = new KeyMapping(
             REVERSE_PLAYERS_VISIBILITY_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding entitiesReverseVisibilityToggle = new KeyBinding(
+    public static KeyMapping entitiesReverseVisibilityToggle = new KeyMapping(
             REVERSE_ENTITIES_VISIBILITY_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding pingToggle = new KeyBinding(
+    public static KeyMapping pingToggle = new KeyMapping(
             PING_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding barriersToggle = new KeyBinding(
+    public static KeyMapping barriersToggle = new KeyMapping(
             BARRIER_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
 
-    public static KeyBinding fullBrightToggle = new KeyBinding(
+    public static KeyMapping fullBrightToggle = new KeyMapping(
             FULL_BRIGHT_TOGGLE,
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             CATEGORY
     );
@@ -148,71 +148,71 @@ public class KeybindingManager {
         keyBindings.add(barriersToggle);
         keyBindings.add(fullBrightToggle);
 
-        for (KeyBinding keyBinding : keyBindings) {
-            KeyBindingHelper.registerKeyBinding(keyBinding);
+        for (KeyMapping keyBinding : keyBindings) {
+            KeyMappingHelper.registerKeyMapping(keyBinding);
         }
 
         // Listen for key presses every tick
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-            if (showAllPlayersToggleBinding.isPressed()) {
+            if (showAllPlayersToggleBinding.isDown()) {
                 ConfigManager.configData.showAllPlayers = !ConfigManager.configData.showAllPlayers;
                 toggleMessage("&3Show All Players &bis now " + (ConfigManager.configData.showAllPlayers ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
-            if (showAllEntitiesToggleBinding.isPressed()) {
+            if (showAllEntitiesToggleBinding.isDown()) {
                 ConfigManager.configData.showAllEntities = !ConfigManager.configData.showAllEntities;
                 toggleMessage("&3Show All Entities &bis now " + (ConfigManager.configData.showAllEntities ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (playersReverseVisibilityToggle.isPressed()) {
+            if (playersReverseVisibilityToggle.isDown()) {
                 ConfigManager.configData.reversedVisibility = !ConfigManager.configData.reversedVisibility;
                 toggleMessage("&3Reversed Players Visibility &bis now " + (ConfigManager.configData.reversedVisibility ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
-            if (entitiesReverseVisibilityToggle.isPressed()) {
+            if (entitiesReverseVisibilityToggle.isDown()) {
                 ConfigManager.configData.reversedEntitiesVisibility = !ConfigManager.configData.reversedEntitiesVisibility;
                 toggleMessage("&3Reversed Entities Visibility &bis now " + (ConfigManager.configData.reversedEntitiesVisibility ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (playersRadiusToggleBinding.isPressed()) {
+            if (playersRadiusToggleBinding.isDown()) {
                 ConfigManager.configData.visibilityRadiusEnabled = !ConfigManager.configData.visibilityRadiusEnabled;
                 toggleMessage("&3Players Visibility Radius &bis now " + (ConfigManager.configData.visibilityRadiusEnabled ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
-            if (entitiesRadiusToggleBinding.isPressed()) {
+            if (entitiesRadiusToggleBinding.isDown()) {
                 ConfigManager.configData.entitiesVisibilityRadiusEnabled = !ConfigManager.configData.entitiesVisibilityRadiusEnabled;
                 toggleMessage("&3Entities Visibility Radius &bis now " + (ConfigManager.configData.entitiesVisibilityRadiusEnabled ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (playersSizeToggle.isPressed()) {
+            if (playersSizeToggle.isDown()) {
                 ConfigManager.configData.visibilityChangeSizeEnabled = !ConfigManager.configData.visibilityChangeSizeEnabled;
                 toggleMessage("&3Players Size &bis now " + (ConfigManager.configData.visibilityChangeSizeEnabled ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (pingToggle.isPressed()) {
+            if (pingToggle.isDown()) {
                 ConfigManager.configData.showPing = !ConfigManager.configData.showPing;
                 toggleMessage("&3Ping &bis now " + (ConfigManager.configData.showPing ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (barriersToggle.isPressed()) {
+            if (barriersToggle.isDown()) {
                 ConfigManager.configData.visibleBarrier = !ConfigManager.configData.visibleBarrier;
-                MinecraftClient.getInstance().worldRenderer.reload();
+                Minecraft.getInstance().levelRenderer.allChanged();
                 toggleMessage("&3Visible Barriers &bis now " + (ConfigManager.configData.visibleBarrier ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
 
-            if (fullBrightToggle.isPressed()) {
+            if (fullBrightToggle.isDown()) {
                 FullBright.toggle();
                 toggleMessage("&3Full Bright &bis now " + (FullBright.isEnabled() ? "&aon" : "&coff"));
             }
 
-            if (playersCycleKeyBinding.isPressed()) {
+            if (playersCycleKeyBinding.isDown()) {
                 EnumsVisibility current = ConfigManager.configData.visibility;
 
                 // Filter only enabled visibilities and sort by ordinal
@@ -234,7 +234,7 @@ public class KeybindingManager {
                 ConfigManager.saveConfig();
             }
 
-            if (entitiesCycleKeyBinding.isPressed()) {
+            if (entitiesCycleKeyBinding.isDown()) {
                 EntitiesEnumsVisibility current = ConfigManager.configData.entitiesVisibility;
 
                 // Filter only enabled visibilities and sort by ordinal
@@ -257,17 +257,22 @@ public class KeybindingManager {
             }
 
 
-            for (KeyBinding keyBinding : keyBindings){
-                keyBinding.setPressed(false);
+            for (KeyMapping keyBinding : keyBindings){
+                keyBinding.setDown(false);
             }
         });
     }
 
     public static void toggleMessage(String text) {
-        if (MinecraftClient.getInstance().player == null) return;
-        Text switchMsg = TextFormatter.formatText(text);
+        if (Minecraft.getInstance().player == null) return;
+        Component switchMsg = TextFormatter.formatText(text);
         if (!ConfigManager.configData.chatOrActionBar.equals(ChatOrActionBar.NONE)) {
-            MinecraftClient.getInstance().player.sendMessage(switchMsg, ConfigManager.configData.chatOrActionBar.equals(ChatOrActionBar.ACTIONBAR));
+            if (ConfigManager.configData.chatOrActionBar.equals(ChatOrActionBar.ACTIONBAR)) {
+                Minecraft.getInstance().player.sendOverlayMessage(switchMsg);
+            } else {
+                Minecraft.getInstance().player.sendSystemMessage(switchMsg);
+            }
+
         }
     }
 }

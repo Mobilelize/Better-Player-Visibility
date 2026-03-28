@@ -1,6 +1,6 @@
 package net.mobilelize.betterplayervisibility.client.utils;
 
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.OptionInstance;
 
 public interface ISimpleOption<T>{
     void betterPlayerVisibility$forceSetValue(T newValue);
@@ -10,7 +10,7 @@ public interface ISimpleOption<T>{
      * to access the forceSetValue() method.
      */
     @SuppressWarnings("unchecked")
-    static <T> ISimpleOption<T> get(SimpleOption<T> option)
+    static <T> ISimpleOption<T> get(OptionInstance<T> option)
     {
         return (ISimpleOption<T>)(Object)option;
     }

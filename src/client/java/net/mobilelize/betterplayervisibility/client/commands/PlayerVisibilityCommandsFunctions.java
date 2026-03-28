@@ -2,9 +2,9 @@ package net.mobilelize.betterplayervisibility.client.commands;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.config.ConfigMenu;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class PlayerVisibilityCommandsFunctions {
     public static int openConfig(CommandContext<FabricClientCommandSource> context){
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         new Thread(() -> client.execute(() -> client.setScreen(ConfigMenu.create(null)))).start();
         return 1;
     }
@@ -31,7 +31,7 @@ public class PlayerVisibilityCommandsFunctions {
 
     public static int nothing(CommandContext<FabricClientCommandSource> context, String message){
         FabricClientCommandSource source = context.getSource();
-        MutableText text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText(message));
+        MutableComponent text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText(message));
         source.sendFeedback(text);
         return 0;
     }
@@ -43,7 +43,7 @@ public class PlayerVisibilityCommandsFunctions {
 
         // If already set to this value, notify
         if (ConfigManager.configData.showAllPlayers == value) {
-            Text text = Text.empty()
+            Component text = Component.empty()
                     .append(BetterPlayerVisibilityClient.PREFIX)
                     .append(TextFormatter.formatText(
                             "&3Show All Players &bis already " + (value ? "&aON" : "&cOFF") + "&3."
@@ -55,7 +55,7 @@ public class PlayerVisibilityCommandsFunctions {
         // Update the value
         ConfigManager.configData.showAllPlayers = value;
 
-        Text text = Text.empty()
+        Component text = Component.empty()
                 .append(BetterPlayerVisibilityClient.PREFIX)
                 .append(TextFormatter.formatText(
                         "&3Show All Players &bhas been set to " + (value ? "&aON" : "&cOFF") + "&3."
@@ -73,7 +73,7 @@ public class PlayerVisibilityCommandsFunctions {
 
         // If already set to this value, notify
         if (ConfigManager.configData.reversedVisibility == value) {
-            Text text = Text.empty()
+            Component text = Component.empty()
                     .append(BetterPlayerVisibilityClient.PREFIX)
                     .append(TextFormatter.formatText(
                             "&3Reverse Players Visibility &bis already " + (value ? "&aON" : "&cOFF") + "&3."
@@ -85,7 +85,7 @@ public class PlayerVisibilityCommandsFunctions {
         // Update the value
         ConfigManager.configData.reversedVisibility = value;
 
-        Text text = Text.empty()
+        Component text = Component.empty()
                 .append(BetterPlayerVisibilityClient.PREFIX)
                 .append(TextFormatter.formatText(
                         "&3Reverse Players Visibility &bhas been set to " + (value ? "&aON" : "&cOFF") + "&3."
@@ -101,12 +101,12 @@ public class PlayerVisibilityCommandsFunctions {
         FabricClientCommandSource source = context.getSource();
 
         if (ConfigManager.configData.visibility == EnumsVisibility.ALL) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Mode &bis already set to &eALL&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Mode &bis already set to &eALL&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibility = EnumsVisibility.ALL;
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &eALL&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &eALL&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -117,12 +117,12 @@ public class PlayerVisibilityCommandsFunctions {
         FabricClientCommandSource source = context.getSource();
 
         if (ConfigManager.configData.visibility == EnumsVisibility.NONE) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bis already set to &eNONE&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bis already set to &eNONE&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibility = EnumsVisibility.NONE;
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &eNONE&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &eNONE&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -132,12 +132,12 @@ public class PlayerVisibilityCommandsFunctions {
     public static int radiusOn(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (ConfigManager.configData.visibilityRadiusEnabled) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bis already &eon&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bis already &eon&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibilityRadiusEnabled = true;
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bhas been turned &eon&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bhas been turned &eon&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -147,12 +147,12 @@ public class PlayerVisibilityCommandsFunctions {
     public static int radiusOff(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (!ConfigManager.configData.visibilityRadiusEnabled) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bis already &eoff&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius &bis already &eoff&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibilityRadiusEnabled = false;
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius has been turned &eoff&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius has been turned &eoff&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -165,7 +165,7 @@ public class PlayerVisibilityCommandsFunctions {
         int number = context.getArgument("number", Integer.class);
 
         ConfigManager.configData.visibilityRadius = number;
-        Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius Range &bhas been set has to &e" + number  + "&3."));
+        Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility Radius Range &bhas been set has to &e" + number  + "&3."));
         source.sendFeedback(text);
 
         ConfigManager.saveConfig();
@@ -175,12 +175,12 @@ public class PlayerVisibilityCommandsFunctions {
     public static int sizeOn(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (ConfigManager.configData.visibilityChangeSizeEnabled) {
-            Text text = Text.empty().append(Text.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bis already &eon&3."));
+            Component text = Component.empty().append(Component.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bis already &eon&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibilityChangeSizeEnabled = true;
-            Text text = Text.empty().append(Text.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been turned &eon&3."));
+            Component text = Component.empty().append(Component.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been turned &eon&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -190,12 +190,12 @@ public class PlayerVisibilityCommandsFunctions {
     public static int sizeOff(CommandContext<FabricClientCommandSource> context) {
         FabricClientCommandSource source = context.getSource();
         if (!ConfigManager.configData.visibilityChangeSizeEnabled) {
-            Text text = Text.empty().append(Text.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bis already &eoff&3."));
+            Component text = Component.empty().append(Component.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bis already &eoff&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibilityChangeSizeEnabled = false;
-            Text text = Text.empty().append(Text.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been turned &eoff&3."));
+            Component text = Component.empty().append(Component.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been turned &eoff&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -208,7 +208,7 @@ public class PlayerVisibilityCommandsFunctions {
         float number = context.getArgument("number", Float.class);
 
         ConfigManager.configData.visibilityChangeSize = number;
-        Text text = Text.empty().append(Text.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been set to &e" + number  + "&3."));
+        Component text = Component.empty().append(Component.empty().append(BetterPlayerVisibilityClient.PREFIX)).append(TextFormatter.formatText("&3Player Visibility Size &bhas been set to &e" + number  + "&3."));
         source.sendFeedback(text);
 
         ConfigManager.saveConfig();
@@ -219,12 +219,12 @@ public class PlayerVisibilityCommandsFunctions {
         FabricClientCommandSource source = context.getSource();
 
         if (ConfigManager.configData.visibility == currentVis) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bis already set to &e" + currentVis.name() + "&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bis already set to &e" + currentVis.name() + "&3."));
             source.sendFeedback(text);
             return 0;
         } else {
             ConfigManager.configData.visibility = currentVis;
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &e" + currentVis.name() + "&3."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&3Player Visibility &bhas been set to &e" + currentVis.name() + "&3."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -260,11 +260,11 @@ public class PlayerVisibilityCommandsFunctions {
         }
 
         if (inList) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&c" + name + " &bis already in the &e" + currentVis.name() + " &3Player list."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&c" + name + " &bis already in the &e" + currentVis.name() + " &3Player list."));
             source.sendFeedback(text);
             return 0;
         } else {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&a" + name + " &bhas been added to the &e" + currentVis.name() + " &3Player list."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&a" + name + " &bhas been added to the &e" + currentVis.name() + " &3Player list."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -292,11 +292,11 @@ public class PlayerVisibilityCommandsFunctions {
         }
 
         if (!inList) {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&c" + name + " &3isn't in the &e" + currentVis.name() + " &3list."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&c" + name + " &3isn't in the &e" + currentVis.name() + " &3list."));
             source.sendFeedback(text);
             return 0;
         } else {
-            Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&a" + name + " &3has been removed from the &e" + currentVis.name() + " &3list."));
+            Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&a" + name + " &3has been removed from the &e" + currentVis.name() + " &3list."));
             source.sendFeedback(text);
         }
         ConfigManager.saveConfig();
@@ -320,7 +320,7 @@ public class PlayerVisibilityCommandsFunctions {
             }
         }
 
-        Text text = Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&e" + currentVis.name() + " &3has been cleared&3."));
+        Component text = Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText("&e" + currentVis.name() + " &3has been cleared&3."));
         source.sendFeedback(text);
         ConfigManager.saveConfig();
         return 1;
@@ -357,7 +357,7 @@ public class PlayerVisibilityCommandsFunctions {
             entireList.append("&b").append(name).append("&8, ");
         }
 
-        source.sendFeedback(Text.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText(entireList.substring(0, entireList.toString().length() - 2))));
+        source.sendFeedback(Component.empty().append(BetterPlayerVisibilityClient.PREFIX).append(TextFormatter.formatText(entireList.substring(0, entireList.toString().length() - 2))));
         return 1;
     }
 }

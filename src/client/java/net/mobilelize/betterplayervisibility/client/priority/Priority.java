@@ -1,10 +1,10 @@
 package net.mobilelize.betterplayervisibility.client.priority;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.Entity;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 
 import java.util.*;
@@ -15,17 +15,17 @@ public class Priority {
     private record PriorityCachedEntry(int index, String name) {}
     private record PriorityEntry(int index, String name, boolean cached) {}
 
-    public static void addPriorityCache(AbstractClientPlayerEntity player) {
-        if (MinecraftClient.getInstance().getNetworkHandler() == null) return;
-        UUID uuid = MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::id).filter(s -> s.equals(player.getUuid())).findFirst().orElse(null);
+    public static void addPriorityCache(AbstractClientPlayer player) {
+        if (Minecraft.getInstance().getConnection() == null) return;
+        UUID uuid = Minecraft.getInstance().getConnection().getOnlinePlayers().stream().map(PlayerInfo::getProfile).map(GameProfile::id).filter(s -> s.equals(player.getUUID())).findFirst().orElse(null);
         if (uuid == null) return;
-        priorityCache.put(player.getUuid(), new PriorityCachedEntry(player.getId(), player.getGameProfile().name()));
+        priorityCache.put(player.getUUID(), new PriorityCachedEntry(player.getId(), player.getGameProfile().name()));
     }
 
     public static void addPriorityCache(int id) {
-        if (MinecraftClient.getInstance().world == null) return;
-        AbstractClientPlayerEntity abstractClientPlayerEntity = MinecraftClient.getInstance().world.getPlayers().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
-        if (abstractClientPlayerEntity == null || abstractClientPlayerEntity.isMainPlayer()) return;
+        if (Minecraft.getInstance().level == null) return;
+        AbstractClientPlayer abstractClientPlayerEntity = Minecraft.getInstance().level.players().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
+        if (abstractClientPlayerEntity == null || abstractClientPlayerEntity.isLocalPlayer()) return;
         addPriorityCache(abstractClientPlayerEntity);
     }
 
@@ -154,10 +154,10 @@ public class Priority {
     }
 
     public static HashMap<Integer, String> getVisiblePlayersPriority() {
-        if (MinecraftClient.getInstance().world == null) return new HashMap<>();
-        List<AbstractClientPlayerEntity> players = MinecraftClient.getInstance().world.getPlayers().stream().sorted(Comparator.comparingInt(Entity::getId)).toList();
+        if (Minecraft.getInstance().level == null) return new HashMap<>();
+        List<AbstractClientPlayer> players = Minecraft.getInstance().level.players().stream().sorted(Comparator.comparingInt(Entity::getId)).toList();
         HashMap<Integer, String> list = new HashMap<>();
-        for (AbstractClientPlayerEntity player : players) {
+        for (AbstractClientPlayer player : players) {
             list.put(player.getId(), player.getGameProfile().name());
         }
         return list;
@@ -177,7 +177,7 @@ public class Priority {
     }
 
     private static int getMainPlayersIndex() {
-        if (MinecraftClient.getInstance().player == null) return -1;
-        return MinecraftClient.getInstance().player.getId();
+        if (Minecraft.getInstance().player == null) return -1;
+        return Minecraft.getInstance().player.getId();
     }
 }

@@ -3,11 +3,11 @@ package net.mobilelize.betterplayervisibility.client.commands;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.command.CommandSource;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.mobilelize.betterplayervisibility.client.highlight.BaseHighlight;
 import net.mobilelize.betterplayervisibility.client.highlight.HighlightPlayers;
 import net.mobilelize.betterplayervisibility.client.visibility.EntitiesEnumsVisibility;
@@ -21,8 +21,8 @@ import java.util.Objects;
 
 public class Suggestions {
     public static final SuggestionProvider<FabricClientCommandSource> getOnlinePlayersNames = (context, builder) -> {
-        for (String playerName : Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getPlayerList().stream().map(PlayerListEntry::getProfile).map(GameProfile::name).toList()) {
-            if (CommandSource.shouldSuggest(builder.getRemaining().toLowerCase(), playerName.toLowerCase())) {
+        for (String playerName : Objects.requireNonNull(Minecraft.getInstance().getConnection()).getOnlinePlayers().stream().map(PlayerInfo::getProfile).map(GameProfile::name).toList()) {
+            if (SharedSuggestionProvider.matchesSubStr(builder.getRemaining().toLowerCase(), playerName.toLowerCase())) {
                 builder.suggest(playerName);
             }
         }
@@ -51,7 +51,7 @@ public class Suggestions {
             }
 
             for (String name : currentList) {
-                if (CommandSource.shouldSuggest(currentName.toLowerCase(), name.toLowerCase())) {
+                if (SharedSuggestionProvider.matchesSubStr(currentName.toLowerCase(), name.toLowerCase())) {
                     builder.suggest(name);
                 }
             }
@@ -79,9 +79,9 @@ public class Suggestions {
                 String namespace = index == -1 ? "" : identifier.substring(0, index);
                 String path = index == -1 ? "" : identifier.substring(index + 1);
 
-                if (CommandSource.shouldSuggest(remaining, identifier.toLowerCase())
-                        || CommandSource.shouldSuggest(remaining, path.toLowerCase())
-                        || CommandSource.shouldSuggest(remaining, namespace.toLowerCase())) {
+                if (SharedSuggestionProvider.matchesSubStr(remaining, identifier.toLowerCase())
+                        || SharedSuggestionProvider.matchesSubStr(remaining, path.toLowerCase())
+                        || SharedSuggestionProvider.matchesSubStr(remaining, namespace.toLowerCase())) {
 
                     builder.suggest(identifier);
                 }
@@ -94,14 +94,14 @@ public class Suggestions {
     public static final SuggestionProvider<FabricClientCommandSource> getAllEntitiesType = (context, builder) -> {
         String remaining = builder.getRemaining().toLowerCase();
 
-        for (Identifier id : Registries.ENTITY_TYPE.getIds()) {
+        for (Identifier id : BuiltInRegistries.ENTITY_TYPE.keySet()) {
             String full = id.toString();         // "minecraft:cow"
             String path = id.getPath();           // "cow"
             String namespace = id.getNamespace(); // "minecraft"
 
-            if (CommandSource.shouldSuggest(remaining, full.toLowerCase())
-                    || CommandSource.shouldSuggest(remaining, path.toLowerCase())
-                    || CommandSource.shouldSuggest(remaining, namespace.toLowerCase())) {
+            if (SharedSuggestionProvider.matchesSubStr(remaining, full.toLowerCase())
+                    || SharedSuggestionProvider.matchesSubStr(remaining, path.toLowerCase())
+                    || SharedSuggestionProvider.matchesSubStr(remaining, namespace.toLowerCase())) {
 
                 builder.suggest(full);
             }

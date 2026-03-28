@@ -1,10 +1,10 @@
 package net.mobilelize.betterplayervisibility.client.mixin;
 
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.world.entity.Entity;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.highlight.HighlightPlayers;
 import net.mobilelize.betterplayervisibility.client.ping.Ping;
@@ -22,14 +22,14 @@ public class EntityRendererMixin {
 
     @Inject(method = "getShadowRadius", at = @At("HEAD"), cancellable = true)
     public <S extends EntityRenderState> void getShadowRadius(S state, CallbackInfoReturnable<Float> cir) {
-        if (state instanceof PlayerEntityRenderState player) {
+        if (state instanceof AvatarRenderState player) {
             if (PlayerVisibility.shouldBeInvisibleById(player.id) && !ConfigManager.configData.visibilityShowShadows) {
                 cir.setReturnValue(0f);
             }
         }
     }
 
-    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderer;renderLabelIfPresent(Lnet/minecraft/client/render/entity/state/EntityRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;Lnet/minecraft/client/render/state/CameraRenderState;)V"))
+    @ModifyArgs(method = "submit", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;submitNameDisplay(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"))
     public <T extends Entity> void renderLabelIfPresent(Args args) {
         //Args.get(0) = State
         HighlightPlayers.highlightNameArgs(args);

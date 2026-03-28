@@ -1,12 +1,12 @@
 package net.mobilelize.betterplayervisibility.client.ping;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -21,42 +21,42 @@ public class Ping {
     public static void pingNameArgs (Args args) {
         if (!ConfigManager.configData.showPing) return;
         //State at args.get(0);
-        if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
+        if (!(args.get(0) instanceof AvatarRenderState player)) return;
 
         //Display name at args.get(1);
-        if (player.displayName == null) return;
+        if (player.nameTag == null) return;
         int ping = getPlayersPingById(player.id);
         BasePing group = getPingGroup(ping);
 
-        player.displayName = modifiedName(player.displayName, group, ping);
+        player.nameTag = modifiedName(player.nameTag, group, ping);
         args.set(0, player);
     }
 
     public static int getPlayersPing(UUID uuid) {
-        if (MinecraftClient.getInstance().getNetworkHandler() == null || uuid == null) return -1;
-        return MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().filter(entry -> entry.getProfile().id().equals(uuid)).map(PlayerListEntry::getLatency).findFirst().orElse(-1);
+        if (Minecraft.getInstance().getConnection() == null || uuid == null) return -1;
+        return Minecraft.getInstance().getConnection().getOnlinePlayers().stream().filter(entry -> entry.getProfile().id().equals(uuid)).map(PlayerInfo::getLatency).findFirst().orElse(-1);
     }
 
     public static int getPlayersPingByName(String name) {
-        if (MinecraftClient.getInstance().getNetworkHandler() == null) return -1;
-        return getPlayersPing(MinecraftClient.getInstance().getNetworkHandler().getPlayerList().stream().map(PlayerListEntry::getProfile).filter(profile -> profile.name().equalsIgnoreCase(name)).map(GameProfile::id).findFirst().orElse(null));
+        if (Minecraft.getInstance().getConnection() == null) return -1;
+        return getPlayersPing(Minecraft.getInstance().getConnection().getOnlinePlayers().stream().map(PlayerInfo::getProfile).filter(profile -> profile.name().equalsIgnoreCase(name)).map(GameProfile::id).findFirst().orElse(null));
     }
 
     public static int getPlayersPingById(int id) {
-        if (MinecraftClient.getInstance().world == null) return -1;
-        AbstractClientPlayerEntity abstractClientPlayerEntity = MinecraftClient.getInstance().world.getPlayers().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
+        if (Minecraft.getInstance().level == null) return -1;
+        AbstractClientPlayer abstractClientPlayerEntity = Minecraft.getInstance().level.players().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
         if (abstractClientPlayerEntity == null) return -1;
-        return getPlayersPing(abstractClientPlayerEntity.getUuid());
+        return getPlayersPing(abstractClientPlayerEntity.getUUID());
     }
 
-    public static Text pingFormatted(int ping) {
+    public static Component pingFormatted(int ping) {
         BasePing pingGroup = getPingGroup(ping);
 
         if (!ConfigManager.configData.useDefaultPingText || pingGroup.ping == EnumsPing.NO) {
-            return Text.literal(pingGroup.text.replace("%ping%", String.valueOf(ping))).setStyle(Style.EMPTY.withColor(pingGroup.color));
+            return Component.literal(pingGroup.text.replace("%ping%", String.valueOf(ping))).setStyle(Style.EMPTY.withColor(pingGroup.color));
         }
 
-        return Text.literal(ConfigManager.configData.defaultPingText.replace("%ping%", String.valueOf(ping))).setStyle(Style.EMPTY.withColor(pingGroup.color));
+        return Component.literal(ConfigManager.configData.defaultPingText.replace("%ping%", String.valueOf(ping))).setStyle(Style.EMPTY.withColor(pingGroup.color));
     }
 
     public static BasePing getPingGroup(int ping) {
@@ -78,12 +78,12 @@ public class Ping {
                 .toList();
     }
 
-    public static Text modifiedName(Text displayText, BasePing group, int ping) {
+    public static Component modifiedName(Component displayText, BasePing group, int ping) {
 
         if (group.ping == EnumsPing.NO && !ConfigManager.configData.showNoPing) {
             return displayText;
         }
 
-        return Text.empty().append(displayText).append(" ").append(pingFormatted(ping));
+        return Component.empty().append(displayText).append(" ").append(pingFormatted(ping));
     }
 }

@@ -1,7 +1,7 @@
 package net.mobilelize.betterplayervisibility.client.fullbright;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.utils.ISimpleOption;
 
@@ -13,7 +13,7 @@ public class FullBright {
 
     public static void init(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!hasRun && MinecraftClient.getInstance().options != null) {
+            if (!hasRun) {
                 hasRun = true;
                 if (ConfigManager.configData.fullBrightEnabled && !isEnabled()) {
                     toggle();
@@ -23,7 +23,7 @@ public class FullBright {
     }
 
     private static void set(double value){
-        ISimpleOption.get(MinecraftClient.getInstance().options.getGamma()).betterPlayerVisibility$forceSetValue(value);
+        ISimpleOption.get(Minecraft.getInstance().options.gamma()).betterPlayerVisibility$forceSetValue(value);
     }
 
     public static void toggle(boolean newValue){
@@ -35,7 +35,7 @@ public class FullBright {
             ConfigManager.configData.fullBrightEnabled = false;
             set(ConfigManager.configData.originalGamma);
         } else {
-            ConfigManager.configData.originalGamma = MinecraftClient.getInstance().options.getGamma().getValue();
+            ConfigManager.configData.originalGamma = Minecraft.getInstance().options.gamma().get();
             ConfigManager.configData.fullBrightEnabled = true;
             set(fullBrightNumber);
         }
@@ -43,7 +43,7 @@ public class FullBright {
     }
 
     public static boolean isEnabled(){
-        return MinecraftClient.getInstance().options.getGamma().getValue() == fullBrightNumber;
+        return Minecraft.getInstance().options.gamma().get() == fullBrightNumber;
     }
 
 }

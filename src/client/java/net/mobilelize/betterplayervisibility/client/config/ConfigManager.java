@@ -2,7 +2,7 @@ package net.mobilelize.betterplayervisibility.client.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient;
 import net.mobilelize.betterplayervisibility.client.highlight.BaseHighlight;
 import net.mobilelize.betterplayervisibility.client.ping.BasePing;
@@ -26,7 +26,7 @@ import static net.mobilelize.betterplayervisibility.client.utils.DefaultValues.d
 public class ConfigManager {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final File CONFIG_DIR = new File(MinecraftClient.getInstance().runDirectory, "config/BetterPlayerVisibility");
+    private static final File CONFIG_DIR = new File(Minecraft.getInstance().gameDirectory, "config/BetterPlayerVisibility");
     private static final File CONFIG_FILE = new File(CONFIG_DIR, "config.json");
 
     public static ConfigData configData = new ConfigData();
@@ -78,6 +78,7 @@ public class ConfigManager {
         public List<String> entitiesVisibilityList3 = new ArrayList<>();
         public List<String> entitiesVisibilityList4 = new ArrayList<>();
         public List<String> entitiesVisibilityList5 = new ArrayList<>();
+        public boolean entitiesVisibilityShowHitboxes = false;
 
         //Highlight Players
         public BaseHighlight staff = new BaseHighlight(EnumsVisibility.STAFF, 0xFFFF55);

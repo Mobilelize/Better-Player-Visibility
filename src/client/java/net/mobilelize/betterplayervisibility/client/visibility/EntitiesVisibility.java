@@ -1,9 +1,9 @@
 package net.mobilelize.betterplayervisibility.client.visibility;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 
 import java.util.List;
@@ -17,8 +17,8 @@ public class EntitiesVisibility {
 
         boolean reverse = ConfigManager.configData.reversedEntitiesVisibility;
 
-        if (entity instanceof AbstractClientPlayerEntity player) {
-            if (player.isMainPlayer()) return false;
+        if (entity instanceof AbstractClientPlayer player) {
+            if (player.isLocalPlayer()) return false;
         }
 
         if (ConfigManager.configData.showAllEntities
@@ -32,7 +32,7 @@ public class EntitiesVisibility {
 
         if (notInRadius(entity)) return false;
 
-        String entityType = EntityType.getId(entity.getType()).toString();
+        String entityType = EntityType.getKey(entity.getType()).toString();
 
         if (ConfigManager.configData.entitiesVisibility == EntitiesEnumsVisibility.NONE) {
             return true;
@@ -48,9 +48,9 @@ public class EntitiesVisibility {
     }
 
     public static boolean shouldBeInvisibleById(int id) {
-        if (MinecraftClient.getInstance().world == null) return false;
+        if (Minecraft.getInstance().level == null) return false;
         Entity entity = null;
-        for (Entity e : MinecraftClient.getInstance().world.getEntities()) {
+        for (Entity e : Minecraft.getInstance().level.entitiesForRendering()) {
             if (Objects.equals(e.getId(), id)) {
                 entity = e;
                 break;
@@ -61,7 +61,9 @@ public class EntitiesVisibility {
     }
 
     private static boolean notInRadius(Entity entity) {
-        return ConfigManager.configData.entitiesVisibilityRadiusEnabled && !entity.isInRange(MinecraftClient.getInstance().player, ConfigManager.configData.entitiesVisibilityRadius);
+        if (!ConfigManager.configData.entitiesVisibilityRadiusEnabled) return false;
+        assert Minecraft.getInstance().player != null;
+        return !entity.closerThan(Minecraft.getInstance().player, ConfigManager.configData.entitiesVisibilityRadius);
     }
 
     private static boolean listDoesNotContainType(List<String> list, String type) {

@@ -1,7 +1,7 @@
 package net.mobilelize.betterplayervisibility.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.text.MutableText;
+import net.minecraft.network.chat.MutableComponent;
 import net.mobilelize.betterplayervisibility.client.commands.Commands;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.fullbright.FullBright;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class BetterPlayerVisibilityClient implements ClientModInitializer {
 
-    public static MutableText PREFIX = TextFormatter.formatText(ConfigManager.configData.prefix).append(" ");
+    public static MutableComponent PREFIX = TextFormatter.formatText(ConfigManager.configData.prefix).append(" ");
 
     public static final Logger LOGGER = LoggerFactory.getLogger("Better Player Visibility");
 

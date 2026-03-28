@@ -1,8 +1,8 @@
 package net.mobilelize.betterplayervisibility.client.visibility;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.highlight.BaseHighlight;
 import net.mobilelize.betterplayervisibility.client.highlight.HighlightPlayers;
@@ -13,20 +13,20 @@ import java.util.Objects;
 
 public class PlayerVisibility {
 
-    public static boolean shouldBeInvisible(AbstractClientPlayerEntity player) {
+    public static boolean shouldBeInvisible(AbstractClientPlayer player) {
 
         boolean reverse = ConfigManager.configData.reversedVisibility;
 
-        if (ConfigManager.configData.invisibleMainPlayer && player.isMainPlayer()) return true;
+        if (ConfigManager.configData.invisibleMainPlayer && player.isLocalPlayer()) return true;
 
-        if (ConfigManager.configData.showAllPlayers || player.isMainPlayer() || isAnNPC(player)
+        if (ConfigManager.configData.showAllPlayers || player.isLocalPlayer() || isAnNPC(player)
                 || (!reverse && ConfigManager.configData.visibility.equals(EnumsVisibility.ALL))
                 || (reverse && ConfigManager.configData.visibility.equals(EnumsVisibility.NONE))) return false;
 
         return reverse != shouldBeInvisibleResult(player);
     }
 
-    private static boolean shouldBeInvisibleResult(AbstractClientPlayerEntity player) {
+    private static boolean shouldBeInvisibleResult(AbstractClientPlayer player) {
 
         if (notInRadius(player)) return false;
 
@@ -52,14 +52,16 @@ public class PlayerVisibility {
     }
 
     public static boolean shouldBeInvisibleById(int id) {
-        if (MinecraftClient.getInstance().world == null) return false;
-        AbstractClientPlayerEntity abstractClientPlayerEntity = MinecraftClient.getInstance().world.getPlayers().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
+        if (Minecraft.getInstance().level == null) return false;
+        AbstractClientPlayer abstractClientPlayerEntity = Minecraft.getInstance().level.players().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
         if (abstractClientPlayerEntity == null) return false;
         return shouldBeInvisible(abstractClientPlayerEntity);
     }
 
-    private static boolean notInRadius(AbstractClientPlayerEntity player) {
-        return ConfigManager.configData.visibilityRadiusEnabled && !player.isInRange(MinecraftClient.getInstance().player, ConfigManager.configData.visibilityRadius);
+    private static boolean notInRadius(AbstractClientPlayer player) {
+        if (!ConfigManager.configData.visibilityRadiusEnabled) return false;
+        assert Minecraft.getInstance().player != null;
+        return !player.closerThan(Minecraft.getInstance().player, ConfigManager.configData.visibilityRadius);
     }
 
     private static boolean listDoesNotContainName(List<String> list, String name) {
@@ -75,7 +77,7 @@ public class PlayerVisibility {
                 EnumsVisibility.WHITELIST_5, ConfigManager.configData.visibilityList5);
     }
 
-    public static boolean isAnNPC(AbstractClientPlayerEntity player) {
+    public static boolean isAnNPC(AbstractClientPlayer player) {
 
         if (!ConfigManager.configData.visibilityNPCEnabled)
             return false;
@@ -89,10 +91,10 @@ public class PlayerVisibility {
 
         // ---- 2. Check tab list presence ----
         if (ConfigManager.configData.visibilityNPCTabListEnabled) {
-            if (MinecraftClient.getInstance().getNetworkHandler() == null) return false;
-            PlayerListEntry entry = MinecraftClient.getInstance()
-                    .getNetworkHandler()
-                    .getPlayerListEntry(player.getGameProfile().id());
+            if (Minecraft.getInstance().getConnection() == null) return false;
+            PlayerInfo entry = Minecraft.getInstance()
+                    .getConnection()
+                    .getPlayerInfo(player.getGameProfile().id());
 
             return entry == null;
         }

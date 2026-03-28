@@ -6,9 +6,9 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient;
 import net.mobilelize.betterplayervisibility.client.fullbright.FullBright;
 import net.mobilelize.betterplayervisibility.client.highlight.BaseHighlight;
@@ -37,7 +37,7 @@ public class ConfigMenu {
 
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.literal("Better Player Visibility"))
+                .setTitle(Component.literal("Better Player Visibility"))
                 .setTransparentBackground(true)
                 .setSavingRunnable(ConfigMenu::saveConfig);
 
@@ -55,153 +55,153 @@ public class ConfigMenu {
     }
 
     public static void general( ConfigBuilder builder, ConfigEntryBuilder entryBuilder){
-        ConfigCategory general = builder.getOrCreateCategory(Text.literal("General"));
+        ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
 
-        general.addEntry(entryBuilder.startStrField(Text.literal("Prefix"), ConfigManager.configData.prefix)
+        general.addEntry(entryBuilder.startStrField(Component.literal("Prefix"), ConfigManager.configData.prefix)
                 .setDefaultValue("&b[BPV]")
-                .setTooltip(Text.literal("Set a custom prefix."))
+                .setTooltip(Component.literal("Set a custom prefix."))
                 .setSaveConsumer(ConfigMenu::setPrefix)
                 .build());
 
-        general.addEntry(entryBuilder.startEnumSelector(Text.of("Keybinds Activation Feedback"), ChatOrActionBar.class, ConfigManager.configData.chatOrActionBar)
+        general.addEntry(entryBuilder.startEnumSelector(Component.literal("Keybinds Activation Feedback"), ChatOrActionBar.class, ConfigManager.configData.chatOrActionBar)
                 .setSaveConsumer(newValue -> ConfigManager.configData.chatOrActionBar = newValue)
-                .setTooltip(Text.literal("Sets which action appears when activating actions though key binds."))
+                .setTooltip(Component.literal("Sets which action appears when activating actions though key binds."))
                 .setDefaultValue(ChatOrActionBar.ACTIONBAR)
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Full Bright Enabled"), FullBright.isEnabled())
+        general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Full Bright Enabled"), FullBright.isEnabled())
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Enable or disable full bright."))
+                .setTooltip(Component.literal("Enable or disable full bright."))
                 .setSaveConsumer(FullBright::toggle)
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Visible Barriers Enabled"), ConfigManager.configData.visibleBarrier)
+        general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visible Barriers Enabled"), ConfigManager.configData.visibleBarrier)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Sets the visibility of barriers."))
+                .setTooltip(Component.literal("Sets the visibility of barriers."))
                 .setSaveConsumer(ConfigMenu::setVisibleBarriers)
                 .build());
 
-        general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Visible Barriers Particles Enabled"), ConfigManager.configData.visibleBarrierParticles)
+        general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visible Barriers Particles Enabled"), ConfigManager.configData.visibleBarrierParticles)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Sets the visibility of barriers particles for visible barriers."))
+                .setTooltip(Component.literal("Sets the visibility of barriers particles for visible barriers."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibleBarrierParticles = newValue)
                 .build());
     }
 
     private static void playerVisibility(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory visibility = builder.getOrCreateCategory(Text.of("Player Visibility"));
+        ConfigCategory visibility = builder.getOrCreateCategory(Component.literal("Player Visibility"));
 
         // Enable Toggle
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Show All Players"), ConfigManager.configData.showAllPlayers)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show All Players"), ConfigManager.configData.showAllPlayers)
                 .setSaveConsumer(newValue -> ConfigManager.configData.showAllPlayers = newValue)
-                .setTooltip(Text.literal("All players visibility."))
+                .setTooltip(Component.literal("All players visibility."))
                 .setDefaultValue(true)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Reverse Visibility"), ConfigManager.configData.reversedVisibility)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Reverse Visibility"), ConfigManager.configData.reversedVisibility)
                 .setSaveConsumer(newValue -> ConfigManager.configData.reversedVisibility = newValue)
-                .setTooltip(Text.literal("Reverses players visibility."))
+                .setTooltip(Component.literal("Reverses players visibility."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Invisible Main Player"), ConfigManager.configData.invisibleMainPlayer)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Invisible Main Player"), ConfigManager.configData.invisibleMainPlayer)
                 .setSaveConsumer(newValue -> ConfigManager.configData.invisibleMainPlayer = newValue)
-                .setTooltip(Text.literal("Makes the main players invisible."))
+                .setTooltip(Component.literal("Makes the main players invisible."))
                 .setDefaultValue(false)
                 .build());
 
         // Enable Radius Toggle
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Radius Enabled"), ConfigManager.configData.visibilityRadiusEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Radius Enabled"), ConfigManager.configData.visibilityRadiusEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityRadiusEnabled = newValue)
-                .setTooltip(Text.literal("Enables player visibility radius."))
+                .setTooltip(Component.literal("Enables player visibility radius."))
                 .setDefaultValue(false)
                 .build());
 
         // Radius Value
-        visibility.addEntry(entryBuilder.startIntField(Text.of("Visibility Radius"), ConfigManager.configData.visibilityRadius)
+        visibility.addEntry(entryBuilder.startIntField(Component.literal("Visibility Radius"), ConfigManager.configData.visibilityRadius)
                 .setMin(0)
-                .setTooltip(Text.literal("Sets the visibility radius."))
+                .setTooltip(Component.literal("Sets the visibility radius."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityRadius = newValue) // Prevent negative values
                 .setDefaultValue(4)
                 .build());
 
         // Enable Radius Toggle
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Size Enabled"), ConfigManager.configData.visibilityChangeSizeEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Size Enabled"), ConfigManager.configData.visibilityChangeSizeEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityChangeSizeEnabled = newValue)
-                .setTooltip(Text.literal("Enables visibility size."))
+                .setTooltip(Component.literal("Enables visibility size."))
                 .setDefaultValue(true)
                 .build());
 
         // Radius Value
-        visibility.addEntry(entryBuilder.startFloatField(Text.of("Visibility Size"), ConfigManager.configData.visibilityChangeSize)
+        visibility.addEntry(entryBuilder.startFloatField(Component.literal("Visibility Size"), ConfigManager.configData.visibilityChangeSize)
                 .setMin(0)
                 .setMax(0.9375F)
-                .setTooltip(Text.literal("Sets the visibility size."))
+                .setTooltip(Component.literal("Sets the visibility size."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityChangeSize = newValue) // Prevent negative values
                 .setDefaultValue(0.3F)
                 .build());
 
         // Enum Selector (Dropdown)
-        visibility.addEntry(entryBuilder.startEnumSelector(Text.of("Visibility Mode"), EnumsVisibility.class, ConfigManager.configData.visibility)
+        visibility.addEntry(entryBuilder.startEnumSelector(Component.literal("Visibility Mode"), EnumsVisibility.class, ConfigManager.configData.visibility)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibility = newValue)
-                .setTooltip(Text.literal("Sets the visibility mode."))
+                .setTooltip(Component.literal("Sets the visibility mode."))
                 .setDefaultValue(EnumsVisibility.WHITELIST)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Name Tag"), ConfigManager.configData.visibilityNameTagEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Name Tag"), ConfigManager.configData.visibilityNameTagEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNameTagEnabled = newValue)
-                .setTooltip(Text.literal("Enables name tag visibility."))
+                .setTooltip(Component.literal("Enables name tag visibility."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Spawn Sprinting Particles"), ConfigManager.configData.visibilitySpawnSprintingParticles)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Spawn Sprinting Particles"), ConfigManager.configData.visibilitySpawnSprintingParticles)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilitySpawnSprintingParticles = newValue)
-                .setTooltip(Text.literal("Enables the spawning of sprinting particles."))
+                .setTooltip(Component.literal("Enables the spawning of sprinting particles."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Show Fire Effect"), ConfigManager.configData.visibilityShowFire)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Show Fire Effect"), ConfigManager.configData.visibilityShowFire)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityShowFire = newValue)
-                .setTooltip(Text.literal("Enables the fire effect on other players."))
+                .setTooltip(Component.literal("Enables the fire effect on other players."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Show Shadows"), ConfigManager.configData.visibilityShowShadows)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Show Shadows"), ConfigManager.configData.visibilityShowShadows)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityShowShadows = newValue)
-                .setTooltip(Text.literal("Enables the shadows on other players."))
+                .setTooltip(Component.literal("Enables the shadows on other players."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Show Hitboxes"), ConfigManager.configData.visibilityShowHitboxes)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Show Hitboxes"), ConfigManager.configData.visibilityShowHitboxes)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityShowHitboxes = newValue)
-                .setTooltip(Text.literal("Enables the debug hitboxes (F3+B) on other invisible players."))
+                .setTooltip(Component.literal("Enables the debug hitboxes (F3+B) on other invisible players."))
                 .setDefaultValue(false)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCEnabled = newValue)
-                .setTooltip(Text.literal("Sets NPC's visibility. Checks if the players name is possible."))
+                .setTooltip(Component.literal("Sets NPC's visibility. Checks if the players name is possible."))
                 .setDefaultValue(true)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC 3 Characters"), ConfigManager.configData.visibilityNPC3Characters)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility NPC 3 Characters"), ConfigManager.configData.visibilityNPC3Characters)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPC3Characters = newValue)
-                .setTooltip(Text.literal("Sets if player's with lest than 3 characters in there names should be considered NPC's."))
+                .setTooltip(Component.literal("Sets if player's with lest than 3 characters in there names should be considered NPC's."))
                 .setDefaultValue(true)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC Tab list"), ConfigManager.configData.visibilityNPCTabListEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility NPC Tab list"), ConfigManager.configData.visibilityNPCTabListEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCTabListEnabled = newValue)
-                .setTooltip(Text.literal("Sets if player's not on the tab list should be considered NPC's."))
+                .setTooltip(Component.literal("Sets if player's not on the tab list should be considered NPC's."))
                 .setDefaultValue(false)
                 .build());
 
         // Enum Toggles as Booleans
-        SubCategoryBuilder enumCategory = entryBuilder.startSubCategory(Text.of("Toggle Visibility Cycle")).setTooltip(Text.literal("Sets the visibility cycle."));
+        SubCategoryBuilder enumCategory = entryBuilder.startSubCategory(Component.literal("Toggle Visibility Cycle")).setTooltip(Component.literal("Sets the visibility cycle."));
 
         Map<EnumsVisibility, Boolean> cycle = defaultVisibilityCycleMap();
         for (EnumsVisibility option : EnumsVisibility.values()) {
-            enumCategory.add(entryBuilder.startBooleanToggle(Text.of(option.name()), ConfigManager.configData.cycleVisibility.getOrDefault(option, cycle.get(option)))
+            enumCategory.add(entryBuilder.startBooleanToggle(Component.literal(option.name()), ConfigManager.configData.cycleVisibility.getOrDefault(option, cycle.get(option)))
                     .setSaveConsumer(newValue -> ConfigManager.configData.cycleVisibility.put(option, newValue))
                     .setDefaultValue(cycle.get(option))
                     .build());
@@ -210,87 +210,93 @@ public class ConfigMenu {
         visibility.addEntry(enumCategory.build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("Whitelist"), ConfigManager.configData.visibilityList)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("Whitelist"), ConfigManager.configData.visibilityList)
                 .setSaveConsumer(value -> ConfigManager.configData.visibilityList = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("2nd Whitelist"), ConfigManager.configData.visibilityList2)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("2nd Whitelist"), ConfigManager.configData.visibilityList2)
                 .setSaveConsumer(value -> ConfigManager.configData.visibilityList2 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("3rd Whitelist"), ConfigManager.configData.visibilityList3)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("3rd Whitelist"), ConfigManager.configData.visibilityList3)
                 .setSaveConsumer(value -> ConfigManager.configData.visibilityList3 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("4th Whitelist"), ConfigManager.configData.visibilityList4)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("4th Whitelist"), ConfigManager.configData.visibilityList4)
                 .setSaveConsumer(value -> ConfigManager.configData.visibilityList4 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("5th Whitelist"), ConfigManager.configData.visibilityList5)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("5th Whitelist"), ConfigManager.configData.visibilityList5)
                 .setSaveConsumer(value -> ConfigManager.configData.visibilityList5 = value)
                 .build());
     }
 
     private static void entityVisibility(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory visibility = builder.getOrCreateCategory(Text.of("Entity's Visibility"));
+        ConfigCategory visibility = builder.getOrCreateCategory(Component.literal("Entity's Visibility"));
 
         // Enable Toggle
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Show All Entities"), ConfigManager.configData.showAllEntities)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show All Entities"), ConfigManager.configData.showAllEntities)
                 .setSaveConsumer(newValue -> ConfigManager.configData.showAllEntities = newValue)
-                .setTooltip(Text.literal("All entities visibility."))
+                .setTooltip(Component.literal("All entities visibility."))
                 .setDefaultValue(true)
                 .build());
 
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Reverse Visibility"), ConfigManager.configData.reversedEntitiesVisibility)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Reverse Visibility"), ConfigManager.configData.reversedEntitiesVisibility)
                 .setSaveConsumer(newValue -> ConfigManager.configData.reversedEntitiesVisibility = newValue)
-                .setTooltip(Text.literal("Reverses entities visibility."))
+                .setTooltip(Component.literal("Reverses entities visibility."))
                 .setDefaultValue(true)
                 .build());
 
         // Enable Radius Toggle
-        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Radius Enabled"), ConfigManager.configData.entitiesVisibilityRadiusEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Radius Enabled"), ConfigManager.configData.entitiesVisibilityRadiusEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityRadiusEnabled = newValue)
-                .setTooltip(Text.literal("Enables entities visibility radius."))
+                .setTooltip(Component.literal("Enables entities visibility radius."))
                 .setDefaultValue(false)
                 .build());
 
         // Radius Value
-        visibility.addEntry(entryBuilder.startIntField(Text.of("Visibility Radius"), ConfigManager.configData.entitiesVisibilityRadius)
+        visibility.addEntry(entryBuilder.startIntField(Component.literal("Visibility Radius"), ConfigManager.configData.entitiesVisibilityRadius)
                 .setMin(0)
-                .setTooltip(Text.literal("Sets the visibility radius."))
+                .setTooltip(Component.literal("Sets the visibility radius."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityRadius = newValue) // Prevent negative values
                 .setDefaultValue(4)
                 .build());
 
         // Enum Selector (Dropdown)
-        visibility.addEntry(entryBuilder.startEnumSelector(Text.of("Visibility Mode"), EntitiesEnumsVisibility.class, ConfigManager.configData.entitiesVisibility)
+        visibility.addEntry(entryBuilder.startEnumSelector(Component.literal("Visibility Mode"), EntitiesEnumsVisibility.class, ConfigManager.configData.entitiesVisibility)
                 .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibility = newValue)
-                .setTooltip(Text.literal("Sets the visibility mode."))
+                .setTooltip(Component.literal("Sets the visibility mode."))
                 .setDefaultValue(EntitiesEnumsVisibility.WHITELIST)
                 .build());
 
-        //visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
+        visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility Show Hitboxes"), ConfigManager.configData.entitiesVisibilityShowHitboxes)
+                .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityShowHitboxes = newValue)
+                .setTooltip(Component.literal("Enables the debug hitboxes (F3+B) on other invisible entities."))
+                .setDefaultValue(false)
+                .build());
+
+        //visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
         //        .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCEnabled = newValue)
-        //        .setTooltip(Text.literal("Enable or disable NPC's visibility."))
+        //        .setTooltip(Component.literal("Enable or disable NPC's visibility."))
         //        .setDefaultValue(true)
         //        .build());
 //
-        //visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC Tab list"), ConfigManager.configData.visibilityNPCTabListEnabled)
+        //visibility.addEntry(entryBuilder.startBooleanToggle(Component.literal("Visibility NPC Tab list"), ConfigManager.configData.visibilityNPCTabListEnabled)
         //        .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCTabListEnabled = newValue)
-        //        .setTooltip(Text.literal("Enable or disable if player's not on the tab list should be considered NPC's."))
+        //        .setTooltip(Component.literal("Enable or disable if player's not on the tab list should be considered NPC's."))
         //        .setDefaultValue(false)
         //        .build());
 
         // Enum Toggles as Booleans
-        SubCategoryBuilder enumCategory = entryBuilder.startSubCategory(Text.of("Toggle Entities Visibility Cycle")).setTooltip(Text.literal("Sets the visibility cycle."));
+        SubCategoryBuilder enumCategory = entryBuilder.startSubCategory(Component.literal("Toggle Entities Visibility Cycle")).setTooltip(Component.literal("Sets the visibility cycle."));
 
         Map<EntitiesEnumsVisibility, Boolean> cycle = defaultEntitiesVisibilityCycleMap();
         for (EntitiesEnumsVisibility option : EntitiesEnumsVisibility.values()) {
-            enumCategory.add(entryBuilder.startBooleanToggle(Text.of(option.name()), ConfigManager.configData.entitiesCycleVisibility.getOrDefault(option, cycle.get(option)))
+            enumCategory.add(entryBuilder.startBooleanToggle(Component.literal(option.name()), ConfigManager.configData.entitiesCycleVisibility.getOrDefault(option, cycle.get(option)))
                     .setSaveConsumer(newValue -> ConfigManager.configData.entitiesCycleVisibility.put(option, newValue))
                     .setDefaultValue(cycle.get(option))
                     .build());
@@ -299,66 +305,66 @@ public class ConfigMenu {
         visibility.addEntry(enumCategory.build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("Whitelist"), ConfigManager.configData.entitiesVisibilityList)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("Whitelist"), ConfigManager.configData.entitiesVisibilityList)
                 .setSaveConsumer(value -> ConfigManager.configData.entitiesVisibilityList = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("2nd Whitelist"), ConfigManager.configData.entitiesVisibilityList2)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("2nd Whitelist"), ConfigManager.configData.entitiesVisibilityList2)
                 .setSaveConsumer(value -> ConfigManager.configData.entitiesVisibilityList2 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("3rd Whitelist"), ConfigManager.configData.entitiesVisibilityList3)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("3rd Whitelist"), ConfigManager.configData.entitiesVisibilityList3)
                 .setSaveConsumer(value -> ConfigManager.configData.entitiesVisibilityList3 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("4th Whitelist"), ConfigManager.configData.entitiesVisibilityList4)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("4th Whitelist"), ConfigManager.configData.entitiesVisibilityList4)
                 .setSaveConsumer(value -> ConfigManager.configData.entitiesVisibilityList4 = value)
                 .build());
 
         // Whitelist Editable List
-        visibility.addEntry(entryBuilder.startStrList(Text.of("5th Whitelist"), ConfigManager.configData.entitiesVisibilityList5)
+        visibility.addEntry(entryBuilder.startStrList(Component.literal("5th Whitelist"), ConfigManager.configData.entitiesVisibilityList5)
                 .setSaveConsumer(value -> ConfigManager.configData.entitiesVisibilityList5 = value)
                 .build());
     }
 
     private static void highlightPlayers(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory highlight = builder.getOrCreateCategory(Text.of("Highlight Players"));
+        ConfigCategory highlight = builder.getOrCreateCategory(Component.literal("Highlight Players"));
         for (BaseHighlight group : HighlightPlayers.getGroupList()) {
             highlight.addEntry(highlightGroup(group, entryBuilder));
         }
     }
 
     private static SubCategoryListEntry highlightGroup(BaseHighlight group, ConfigEntryBuilder entryBuilder) {
-        SubCategoryBuilder subCategoryBuilder = entryBuilder.startSubCategory(Text.literal(group.group.name())).setExpanded(false);
+        SubCategoryBuilder subCategoryBuilder = entryBuilder.startSubCategory(Component.literal(group.group.name())).setExpanded(false);
 
-        subCategoryBuilder.add(entryBuilder.startBooleanToggle(Text.literal(group.group.name() + " List Enabled"), group.highlightEnabled)
+        subCategoryBuilder.add(entryBuilder.startBooleanToggle(Component.literal(group.group.name() + " List Enabled"), group.highlightEnabled)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Enable or disable the " + group.group.name().toLowerCase() + " section."))
+                .setTooltip(Component.literal("Enable or disable the " + group.group.name().toLowerCase() + " section."))
                 .setSaveConsumer(newValue -> group.highlightEnabled = newValue)
                 .build());
 
-        subCategoryBuilder.add(entryBuilder.startEnumSelector(Text.literal(group.group.name() + " Identifier Mode"), HighlightPlayerModeOption.class, group.identifierMode)
+        subCategoryBuilder.add(entryBuilder.startEnumSelector(Component.literal(group.group.name() + " Identifier Mode"), HighlightPlayerModeOption.class, group.identifierMode)
                 .setDefaultValue(HighlightPlayerModeOption.TAG)
-                .setTooltip(Text.literal("Choose between Off, Both, Tag, or Name."))
+                .setTooltip(Component.literal("Choose between Off, Both, Tag, or Name."))
                 .setSaveConsumer(newValue -> group.identifierMode = newValue)
                 .build());
 
-        subCategoryBuilder.add(entryBuilder.startStrField(Text.literal(group.group.name() + " Tag"), group.tag)
+        subCategoryBuilder.add(entryBuilder.startStrField(Component.literal(group.group.name() + " Tag"), group.tag)
                 .setDefaultValue("⬤")
-                .setTooltip(Text.literal("Set the tag."))
+                .setTooltip(Component.literal("Set the tag."))
                 .setSaveConsumer(newValue -> group.tag = newValue)
                 .build());
 
-        subCategoryBuilder.add(entryBuilder.startColorField(Text.literal(group.group.name() + " Identifier Color"), group.identifierColor)
+        subCategoryBuilder.add(entryBuilder.startColorField(Component.literal(group.group.name() + " Identifier Color"), group.identifierColor)
                 .setDefaultValue(group.defaultIdentifierColor)
-                .setTooltip(Text.literal("Choose the identifier's color in hex format."))
+                .setTooltip(Component.literal("Choose the identifier's color in hex format."))
                 .setSaveConsumer(group::setIdentifierColor)
                 .build());
 
-        subCategoryBuilder.add(entryBuilder.startStrList(Text.literal(group.group.name() + " List"), group.list)
+        subCategoryBuilder.add(entryBuilder.startStrList(Component.literal(group.group.name() + " List"), group.list)
                 .setSaveConsumer(newValue -> group.list = newValue)
                 .build());
 
@@ -366,23 +372,23 @@ public class ConfigMenu {
     }
 
     private static void ping(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory ping = builder.getOrCreateCategory(Text.of("Ping"));
+        ConfigCategory ping = builder.getOrCreateCategory(Component.literal("Ping"));
 
-        ping.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Ping"), ConfigManager.configData.showPing)
+        ping.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Ping"), ConfigManager.configData.showPing)
                 .setSaveConsumer(newValue -> ConfigManager.configData.showPing = newValue)
-                .setTooltip(Text.literal("Shows players ping."))
+                .setTooltip(Component.literal("Shows players ping."))
                 .setDefaultValue(false)
                 .build());
 
-        ping.addEntry(entryBuilder.startBooleanToggle(Text.literal("Use Default Ping Text"), ConfigManager.configData.useDefaultPingText)
+        ping.addEntry(entryBuilder.startBooleanToggle(Component.literal("Use Default Ping Text"), ConfigManager.configData.useDefaultPingText)
                 .setSaveConsumer(newValue -> ConfigManager.configData.useDefaultPingText = newValue)
-                .setTooltip(Text.literal("Sets if ping should only use the default ping text for all ping."))
+                .setTooltip(Component.literal("Sets if ping should only use the default ping text for all ping."))
                 .setDefaultValue(true)
                 .build());
 
-        ping.addEntry(entryBuilder.startStrField(Text.literal("Default Ping Text"), ConfigManager.configData.defaultPingText)
+        ping.addEntry(entryBuilder.startStrField(Component.literal("Default Ping Text"), ConfigManager.configData.defaultPingText)
                 .setSaveConsumer(newValue -> ConfigManager.configData.defaultPingText = newValue)
-                .setTooltip(Text.literal("Sets the default ping text."))
+                .setTooltip(Component.literal("Sets the default ping text."))
                 .setDefaultValue("%ping%ms")
                 .build());
 
@@ -392,144 +398,144 @@ public class ConfigMenu {
             if (group.ping == EnumsPing.NO) continue;
 
             ping.addEntry(entryBuilder
-                    .startColorField(Text.literal(group.formattedName + " Ping Color"), group.color)
+                    .startColorField(Component.literal(group.formattedName + " Ping Color"), group.color)
                     .setSaveConsumer(newValue -> group.color = newValue)
-                    .setTooltip(Text.literal("Sets the " + group.formattedName.toLowerCase() + " ping color."))
+                    .setTooltip(Component.literal("Sets the " + group.formattedName.toLowerCase() + " ping color."))
                     .setDefaultValue(group.defaultColor)
                     .build()
             );
 
             ping.addEntry(entryBuilder
-                    .startIntField(Text.literal(group.formattedName + " Ping Range"), group.range)
+                    .startIntField(Component.literal(group.formattedName + " Ping Range"), group.range)
                     .setSaveConsumer(newValue -> group.range = newValue)
                     .setMin(0)
-                    .setTooltip(Text.literal("Sets the " + group.formattedName.toLowerCase() + " ping range."))
+                    .setTooltip(Component.literal("Sets the " + group.formattedName.toLowerCase() + " ping range."))
                     .setDefaultValue(group.defaultRange)
                     .build()
             );
         }
 
-        SubCategoryBuilder allPingText = entryBuilder.startSubCategory(Text.literal("All Ping Text")).setTooltip(Text.literal("Sets all of the ping text."));
+        SubCategoryBuilder allPingText = entryBuilder.startSubCategory(Component.literal("All Ping Text")).setTooltip(Component.literal("Sets all of the ping text."));
 
         for (BasePing group : reversed){
             if (group.ping == EnumsPing.NO) continue;
 
             allPingText.add(entryBuilder
-                    .startStrField(Text.literal( group.formattedName + " Ping Text"), group.text)
+                    .startStrField(Component.literal( group.formattedName + " Ping Text"), group.text)
                     .setSaveConsumer(newValue -> group.text = newValue)
-                    .setTooltip(Text.literal("Sets the " + group.formattedName.toLowerCase() + " ping text."))
+                    .setTooltip(Component.literal("Sets the " + group.formattedName.toLowerCase() + " ping text."))
                     .setDefaultValue(group.defaultText)
                     .build());
         }
 
         ping.addEntry(allPingText.build());
 
-        ping.addEntry(entryBuilder.startBooleanToggle(Text.literal("No Ping Enabled"), ConfigManager.configData.showNoPing)
+        ping.addEntry(entryBuilder.startBooleanToggle(Component.literal("No Ping Enabled"), ConfigManager.configData.showNoPing)
                 .setSaveConsumer(newValue -> ConfigManager.configData.showNoPing = newValue)
-                .setTooltip(Text.literal("Sets if no ping should show."))
+                .setTooltip(Component.literal("Sets if no ping should show."))
                 .setDefaultValue(false)
                 .build());
 
-        ping.addEntry(entryBuilder.startStrField(Text.literal("No Ping Text"), ConfigManager.configData.noPing.text)
+        ping.addEntry(entryBuilder.startStrField(Component.literal("No Ping Text"), ConfigManager.configData.noPing.text)
                 .setSaveConsumer(newValue -> ConfigManager.configData.noPing.text = newValue)
-                .setTooltip(Text.literal("Sets the no ping text."))
+                .setTooltip(Component.literal("Sets the no ping text."))
                 .setDefaultValue(ConfigManager.configData.noPing.defaultText)
                 .build());
 
-        ping.addEntry(entryBuilder.startColorField(Text.literal("No Ping Color"), ConfigManager.configData.noPing.color)
+        ping.addEntry(entryBuilder.startColorField(Component.literal("No Ping Color"), ConfigManager.configData.noPing.color)
                 .setSaveConsumer(newValue -> ConfigManager.configData.noPing.color = newValue)
-                .setTooltip(Text.literal("Sets the no ping color."))
+                .setTooltip(Component.literal("Sets the no ping color."))
                 .setDefaultValue(ConfigManager.configData.noPing.defaultColor)
                 .build());
     }
 
     public static void priority(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory priority = builder.getOrCreateCategory(Text.literal("Priority"));
+        ConfigCategory priority = builder.getOrCreateCategory(Component.literal("Priority"));
 
-        priority.addEntry(entryBuilder.startBooleanToggle(Text.literal("Priority List Show Beginning Text"), ConfigManager.configData.priorityShowBeginningText)
+        priority.addEntry(entryBuilder.startBooleanToggle(Component.literal("Priority List Show Beginning Text"), ConfigManager.configData.priorityShowBeginningText)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Sets if the priority text should appear at the start of the list."))
+                .setTooltip(Component.literal("Sets if the priority text should appear at the start of the list."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityShowBeginningText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startBooleanToggle(Text.literal("Priority Use Cached List"), ConfigManager.configData.priorityUseCachedList)
+        priority.addEntry(entryBuilder.startBooleanToggle(Component.literal("Priority Use Cached List"), ConfigManager.configData.priorityUseCachedList)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Sets if the priority should show the list of all players that was saved outside your render distance."))
+                .setTooltip(Component.literal("Sets if the priority should show the list of all players that was saved outside your render distance."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityUseCachedList = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startBooleanToggle(Text.literal("Priority Show Entire List on Search"), ConfigManager.configData.priorityShowEntireListForSearch)
+        priority.addEntry(entryBuilder.startBooleanToggle(Component.literal("Priority Show Entire List on Search"), ConfigManager.configData.priorityShowEntireListForSearch)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Sets if the priority list should show the entire list when searching for a player."))
+                .setTooltip(Component.literal("Sets if the priority list should show the entire list when searching for a player."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityShowEntireListForSearch = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startBooleanToggle(Text.literal("Priority Remove Last Separator Enabled"), ConfigManager.configData.priorityRemoveLastSeparator)
+        priority.addEntry(entryBuilder.startBooleanToggle(Component.literal("Priority Remove Last Separator Enabled"), ConfigManager.configData.priorityRemoveLastSeparator)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Sets if the priority should remove the last separator."))
+                .setTooltip(Component.literal("Sets if the priority should remove the last separator."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityRemoveLastSeparator = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority List Beginning Text"), ConfigManager.configData.priorityBeginningText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority List Beginning Text"), ConfigManager.configData.priorityBeginningText)
                 .setDefaultValue("&3Pickup Priority based on people around you.")
-                .setTooltip(Text.literal("Sets the priority list beginning text."))
+                .setTooltip(Component.literal("Sets the priority list beginning text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityBeginningText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority Separator Text"), ConfigManager.configData.prioritySeparatorText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority Separator Text"), ConfigManager.configData.prioritySeparatorText)
                 .setDefaultValue("&8,%space%")
-                .setTooltip(Text.literal("Sets the priority separator text."))
+                .setTooltip(Component.literal("Sets the priority separator text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.prioritySeparatorText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority Search For Text"), ConfigManager.configData.prioritySearchedForPlayerText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority Search For Text"), ConfigManager.configData.prioritySearchedForPlayerText)
                 .setDefaultValue("&5%n%:&d%p%%s%")
-                .setTooltip(Text.literal("Sets the priority search for text."))
+                .setTooltip(Component.literal("Sets the priority search for text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.prioritySearchedForPlayerText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority Search For Not Found Text"), ConfigManager.configData.prioritySearchedForNotFoundText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority Search For Not Found Text"), ConfigManager.configData.prioritySearchedForNotFoundText)
                 .setDefaultValue("&c%p% &3pickup priority couldn't be found.")
-                .setTooltip(Text.literal("Sets the priority search for not found text."))
+                .setTooltip(Component.literal("Sets the priority search for not found text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.prioritySearchedForNotFoundText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority List Main Player Text"), ConfigManager.configData.priorityMainPlayerText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority List Main Player Text"), ConfigManager.configData.priorityMainPlayerText)
                 .setDefaultValue("&l&6%n%:&e%p%&r%s%")
-                .setTooltip(Text.literal("Sets the priority list main player text."))
+                .setTooltip(Component.literal("Sets the priority list main player text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityMainPlayerText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority List Normal Player Text"), ConfigManager.configData.priorityNormalText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority List Normal Player Text"), ConfigManager.configData.priorityNormalText)
                 .setDefaultValue("&3%n%:&b%p%%s%")
-                .setTooltip(Text.literal("Sets the priority list normal player text."))
+                .setTooltip(Component.literal("Sets the priority list normal player text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityNormalText = newValue)
                 .build());
 
-        priority.addEntry(entryBuilder.startStrField(Text.literal("Priority Cached Player Text"), ConfigManager.configData.priorityCachedText)
+        priority.addEntry(entryBuilder.startStrField(Component.literal("Priority Cached Player Text"), ConfigManager.configData.priorityCachedText)
                 .setDefaultValue("&8%n%:&7%p%%s%")
-                .setTooltip(Text.literal("Sets the priority cached text."))
+                .setTooltip(Component.literal("Sets the priority cached text."))
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityCachedText = newValue)
                 .build());
 
-        SubCategoryBuilder priorityGroupsEnabled = entryBuilder.startSubCategory(Text.literal("Priority Groups Enabled"));
+        SubCategoryBuilder priorityGroupsEnabled = entryBuilder.startSubCategory(Component.literal("Priority Groups Enabled"));
 
         for (BasePriorityGroup priorityGroup : Priority.getPriorityGroupList()) {
-            priorityGroupsEnabled.add(entryBuilder.startBooleanToggle(Text.literal("Priority List " + priorityGroup.highlightGroup.formattedName + " Enabled"), priorityGroup.showPriorityGroup)
+            priorityGroupsEnabled.add(entryBuilder.startBooleanToggle(Component.literal("Priority List " + priorityGroup.highlightGroup.formattedName + " Enabled"), priorityGroup.showPriorityGroup)
                     .setDefaultValue(true)
-                    .setTooltip(Text.literal("Sets the priority list " + priorityGroup.highlightGroup.formattedName.toLowerCase() + " should be enabled."))
+                    .setTooltip(Component.literal("Sets the priority list " + priorityGroup.highlightGroup.formattedName.toLowerCase() + " should be enabled."))
                     .setSaveConsumer(newValue -> priorityGroup.showPriorityGroup = newValue)
                     .build());
         }
 
         priority.addEntry(priorityGroupsEnabled.build());
 
-        SubCategoryBuilder subCategoryBuilderText = entryBuilder.startSubCategory(Text.literal("Priority Groups Text"));
+        SubCategoryBuilder subCategoryBuilderText = entryBuilder.startSubCategory(Component.literal("Priority Groups Text"));
 
         for (BasePriorityGroup priorityGroup : Priority.getPriorityGroupList()) {
-            subCategoryBuilderText.add(entryBuilder.startStrField(Text.literal("Priority List " + priorityGroup.highlightGroup.formattedName + " Player Text"), priorityGroup.priorityText)
+            subCategoryBuilderText.add(entryBuilder.startStrField(Component.literal("Priority List " + priorityGroup.highlightGroup.formattedName + " Player Text"), priorityGroup.priorityText)
                     .setDefaultValue("%a%%n%:%c%%p%%s%")
-                    .setTooltip(Text.literal("Sets the priority list " + priorityGroup.highlightGroup.formattedName.toLowerCase() + " player text."))
+                    .setTooltip(Component.literal("Sets the priority list " + priorityGroup.highlightGroup.formattedName.toLowerCase() + " player text."))
                     .setSaveConsumer(newValue -> priorityGroup.priorityText = newValue)
                     .build());
         }
@@ -552,7 +558,7 @@ public class ConfigMenu {
     }
 
     public static void commands(ConfigBuilder builder, ConfigEntryBuilder entryBuilder) {
-        ConfigCategory commands = builder.getOrCreateCategory(Text.literal("Commands"));
+        ConfigCategory commands = builder.getOrCreateCategory(Component.literal("Commands"));
 
         commands.addEntry(entryBuilder.startTextDescription(TextFormatter
                         .formatText("&3All &badditions and removals &3of aliases requires the player to switch server's example, hub-1 to hub-2, or by leaving the world there in, to update the commands&3."))
@@ -566,7 +572,7 @@ public class ConfigMenu {
                         .formatText("&3Player Visibility:"))
                 .build());
 
-        commands.addEntry(entryBuilder.startStrList(Text.literal("/visibility Aliases List"), ConfigManager.configData.visibilityCommandAliases)
+        commands.addEntry(entryBuilder.startStrList(Component.literal("/visibility Aliases List"), ConfigManager.configData.visibilityCommandAliases)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityCommandAliases = newValue)
                 .build());
 
@@ -574,7 +580,7 @@ public class ConfigMenu {
                         .formatText("&3Entity visibility:"))
                 .build());
 
-        commands.addEntry(entryBuilder.startStrList(Text.literal("/entitiesvisibility Aliases List"), ConfigManager.configData.entitiesVisibilityCommandAliases)
+        commands.addEntry(entryBuilder.startStrList(Component.literal("/entitiesvisibility Aliases List"), ConfigManager.configData.entitiesVisibilityCommandAliases)
                 .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityCommandAliases = newValue)
                 .build());
 
@@ -582,7 +588,7 @@ public class ConfigMenu {
                         .formatText("&3Ping:"))
                 .build());
 
-        commands.addEntry(entryBuilder.startStrList(Text.literal("/pingget Aliases List"), ConfigManager.configData.pingCommandAliases)
+        commands.addEntry(entryBuilder.startStrList(Component.literal("/pingget Aliases List"), ConfigManager.configData.pingCommandAliases)
                 .setSaveConsumer(newValue -> ConfigManager.configData.pingCommandAliases = newValue)
                 .build());
 
@@ -590,7 +596,7 @@ public class ConfigMenu {
                         .formatText("&3Priority:"))
                 .build());
 
-        commands.addEntry(entryBuilder.startStrList(Text.literal("/priority Aliases List"), ConfigManager.configData.priorityCommandAliases)
+        commands.addEntry(entryBuilder.startStrList(Component.literal("/priority Aliases List"), ConfigManager.configData.priorityCommandAliases)
                 .setSaveConsumer(newValue -> ConfigManager.configData.priorityCommandAliases = newValue)
                 .build());
     }
@@ -602,7 +608,7 @@ public class ConfigMenu {
     private static void setVisibleBarriers(boolean newValue) {
         if (ConfigManager.configData.visibleBarrier == newValue) return;
         ConfigManager.configData.visibleBarrier = newValue;
-        if (MinecraftClient.getInstance().worldRenderer != null) MinecraftClient.getInstance().worldRenderer.reload();
+        Minecraft.getInstance().levelRenderer.allChanged();
     }
 
     private static void setPrefix(String newValue) {

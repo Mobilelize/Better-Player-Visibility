@@ -1,10 +1,10 @@
 package net.mobilelize.betterplayervisibility.client.highlight;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.mobilelize.betterplayervisibility.client.BetterPlayerVisibilityClient;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
@@ -16,16 +16,16 @@ public class HighlightPlayers {
 
     public static void highlightNameArgs (Args args) {
         //State at args.get(0);
-        if (!(args.get(0) instanceof PlayerEntityRenderState player)) return;
-        if (player.displayName == null) return;
-        AbstractClientPlayerEntity playerEntity = getPlayerById(player.id);
+        if (!(args.get(0) instanceof AvatarRenderState player)) return;
+        if (player.nameTag == null) return;
+        AbstractClientPlayer playerEntity = getPlayerById(player.id);
         if (playerEntity == null) return;
         String playerName = playerEntity.getName().getString();
 
         BaseHighlight group = getGroupByPlayerName(playerName);
         if (group == null || !group.highlightEnabled) return;
 
-        player.displayName = modifiedName(player.displayName, group);
+        player.nameTag = modifiedName(player.nameTag, group);
         args.set(0, player);
     }
 
@@ -38,13 +38,13 @@ public class HighlightPlayers {
         return null;
     }
 
-    private static AbstractClientPlayerEntity getPlayerById(int id) {
-        if (MinecraftClient.getInstance().world == null) return null;
-        return MinecraftClient.getInstance().world.getPlayers().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
+    private static AbstractClientPlayer getPlayerById(int id) {
+        if (Minecraft.getInstance().level == null) return null;
+        return Minecraft.getInstance().level.players().stream().filter(entry -> Objects.equals(entry.getId(), id)).findFirst().orElse(null);
     }
 
-    public static Text modifiedName(Text displayText, BaseHighlight group) {
-        MutableText modifiedText = Text.empty();
+    public static Component modifiedName(Component displayText, BaseHighlight group) {
+        MutableComponent modifiedText = Component.empty();
         if (group.identifierMode == HighlightPlayerModeOption.OFF) {
             return displayText;
         }
@@ -52,7 +52,7 @@ public class HighlightPlayers {
         boolean both = group.identifierMode == HighlightPlayerModeOption.BOTH;
 
         if (group.identifierMode == HighlightPlayerModeOption.TAG || both) {
-            modifiedText.append(Text.literal(group.tag).withColor(group.identifierColor)).append(" ");
+            modifiedText.append(Component.literal(group.tag).withColor(group.identifierColor)).append(" ");
         }
 
         if (group.identifierMode == HighlightPlayerModeOption.NAME || both) {
