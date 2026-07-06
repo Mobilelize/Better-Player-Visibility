@@ -6,6 +6,7 @@
   "client": [
     "ClientPlayNetworkHandlerMixin",
     "ClientWorld",
+    "EntityHitboxDebugRendererMixin",
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "PlayerEntityRendererMixin",
