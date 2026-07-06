@@ -172,6 +172,12 @@ public class ConfigMenu {
                 .setDefaultValue(false)
                 .build());
 
+        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Show Hitboxes"), ConfigManager.configData.visibilityShowHitboxes)
+                .setSaveConsumer(newValue -> ConfigManager.configData.visibilityShowHitboxes = newValue)
+                .setTooltip(Text.literal("Enables the debug hitboxes (F3+B) on other invisible players."))
+                .setDefaultValue(false)
+                .build());
+
         visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
                 .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCEnabled = newValue)
                 .setTooltip(Text.literal("Sets NPC's visibility. Checks if the players name is possible."))

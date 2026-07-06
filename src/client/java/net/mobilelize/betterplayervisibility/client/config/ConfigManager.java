@@ -61,6 +61,7 @@ public class ConfigManager {
         public boolean visibilityNameTagEnabled = false;
         public boolean visibilityShowFire = false;
         public boolean visibilityShowShadows = false;
+        public boolean visibilityShowHitboxes = false;
         public boolean visibilitySpawnSprintingParticles = false;
         public boolean visibilityChangeSizeEnabled = true;
         public float visibilityChangeSize = 0.3F;
