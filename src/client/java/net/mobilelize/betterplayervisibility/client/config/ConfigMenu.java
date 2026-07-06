@@ -273,6 +273,12 @@ public class ConfigMenu {
                 .setDefaultValue(EntitiesEnumsVisibility.WHITELIST)
                 .build());
 
+        visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility Show Hitboxes"), ConfigManager.configData.entitiesVisibilityShowHitboxes)
+                .setSaveConsumer(newValue -> ConfigManager.configData.entitiesVisibilityShowHitboxes = newValue)
+                .setTooltip(Text.literal("Enables the debug hitboxes (F3+B) on other invisible entities."))
+                .setDefaultValue(false)
+                .build());
+
         //visibility.addEntry(entryBuilder.startBooleanToggle(Text.of("Visibility NPC"), ConfigManager.configData.visibilityNPCEnabled)
         //        .setSaveConsumer(newValue -> ConfigManager.configData.visibilityNPCEnabled = newValue)
         //        .setTooltip(Text.literal("Enable or disable NPC's visibility."))

@@ -78,6 +78,7 @@ public class ConfigManager {
         public List<String> entitiesVisibilityList3 = new ArrayList<>();
         public List<String> entitiesVisibilityList4 = new ArrayList<>();
         public List<String> entitiesVisibilityList5 = new ArrayList<>();
+        public boolean entitiesVisibilityShowHitboxes = false;
 
         //Highlight Players
         public BaseHighlight staff = new BaseHighlight(EnumsVisibility.STAFF, 0xFFFF55);
