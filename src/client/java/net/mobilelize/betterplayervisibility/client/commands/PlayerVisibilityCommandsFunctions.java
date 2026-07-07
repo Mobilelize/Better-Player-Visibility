@@ -20,7 +20,7 @@ import java.util.Map;
 public class PlayerVisibilityCommandsFunctions {
     public static int openConfig(CommandContext<FabricClientCommandSource> context){
         Minecraft client = Minecraft.getInstance();
-        new Thread(() -> client.execute(() -> client.setScreen(ConfigMenu.create(null)))).start();
+        new Thread(() -> client.execute(() -> client.setScreenAndShow(ConfigMenu.create(null)))).start();
         return 1;
     }
 

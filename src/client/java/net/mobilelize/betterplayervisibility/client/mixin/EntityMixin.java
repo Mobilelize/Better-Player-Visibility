@@ -2,6 +2,7 @@ package net.mobilelize.betterplayervisibility.client.mixin;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.mobilelize.betterplayervisibility.client.config.ConfigManager;
 import net.mobilelize.betterplayervisibility.client.visibility.PlayerVisibility;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,14 +21,14 @@ public abstract class EntityMixin {
 
     @Inject(method = "spawnSprintParticle", at = @At("HEAD"), cancellable = true)
     public void spawnSprintingParticles(CallbackInfo ci){
-        if (!ConfigManager.configData.visibilitySpawnSprintingParticles && getType() == EntityType.PLAYER && PlayerVisibility.shouldBeInvisibleById(getId())){
+        if (!ConfigManager.configData.visibilitySpawnSprintingParticles && getType() == EntityTypes.PLAYER && PlayerVisibility.shouldBeInvisibleById(getId())){
             ci.cancel();
         }
     }
 
     @Inject(method = "displayFireAnimation", at = @At("HEAD"), cancellable = true)
     public void doesRenderOnFire(CallbackInfoReturnable<Boolean> cir){
-        if (!ConfigManager.configData.visibilityShowFire && getType() == EntityType.PLAYER && PlayerVisibility.shouldBeInvisibleById(getId())){
+        if (!ConfigManager.configData.visibilityShowFire && getType() == EntityTypes.PLAYER && PlayerVisibility.shouldBeInvisibleById(getId())){
             cir.setReturnValue(false);
         }
     }

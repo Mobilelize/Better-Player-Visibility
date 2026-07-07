@@ -608,7 +608,7 @@ public class ConfigMenu {
     private static void setVisibleBarriers(boolean newValue) {
         if (ConfigManager.configData.visibleBarrier == newValue) return;
         ConfigManager.configData.visibleBarrier = newValue;
-        Minecraft.getInstance().levelRenderer.allChanged();
+        Minecraft.getInstance().levelExtractor.allChanged();
     }
 
     private static void setPrefix(String newValue) {

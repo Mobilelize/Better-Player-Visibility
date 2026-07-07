@@ -202,7 +202,7 @@ public class KeybindingManager {
 
             if (barriersToggle.isDown()) {
                 ConfigManager.configData.visibleBarrier = !ConfigManager.configData.visibleBarrier;
-                Minecraft.getInstance().levelRenderer.allChanged();
+                Minecraft.getInstance().levelExtractor.allChanged();
                 toggleMessage("&3Visible Barriers &bis now " + (ConfigManager.configData.visibleBarrier ? "&aon" : "&coff"));
                 ConfigManager.saveConfig();
             }
